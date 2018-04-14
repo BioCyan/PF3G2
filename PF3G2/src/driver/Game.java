@@ -1,0 +1,168 @@
+package driver;
+
+import java.util.List;
+import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+import maze.Maze;
+import math.*;
+import model.*;
+
+public class Game extends JPanel {
+	private static final long serialVersionUID = 1L;
+
+	private List<Poly> polygons;
+	private Transform camera;
+	private Dimension screenSize;
+	private long time;
+	private long lastFPSCheck;
+	private long lastRepaint;
+	private float sensitivity = 5.0f/1000;
+	private float yawAngle = 0;
+	private float pitchAngle = 0;
+	private int frameCount = 0;
+	private int moveX;
+	private int moveZ;
+	private Vector cameraPos;
+	private float moveSpeed;
+	private BSPTree tree;
+	
+	public Game(Dimension screenSize) {
+		setFocusable(true);
+		
+		moveSpeed = 4;
+		Maze maze = new Maze(32, 32);
+		polygons = maze.getPolys(Color.BLUE);
+		tree = maze.genBSP();
+		cameraPos = new Vector(-16, 0, -16);
+		camera = new Transform();
+		this.screenSize = screenSize;
+		hideCursor();
+		centerMouse();
+		enableEvents(MouseEvent.MOUSE_MOVED);
+		
+		time = System.currentTimeMillis();
+		lastFPSCheck = time;
+		lastRepaint = time;
+	}
+	
+	void hideCursor() {
+		 BufferedImage image = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
+		 Cursor cursor = Toolkit.getDefaultToolkit()
+				 .createCustomCursor(image, new Point(0,0), "InvisibleCursor");        
+		 setCursor(cursor);
+	}
+	
+	public void paintComponent(Graphics graphics) {
+		long currentTime = System.currentTimeMillis();
+		float deltaTime = 0.001f*(currentTime - lastRepaint);
+		
+		graphics.setColor(Color.BLACK);
+		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
+		
+		Rotation rot = new Rotation(yawAngle, pitchAngle);
+		Vector movement = rot.localToWorld((new Vector(moveX, 0, moveZ)).times(moveSpeed*deltaTime));
+		cameraPos = cameraPos.plus(movement);
+		camera = new Transform(cameraPos, rot);
+		
+		/*
+		for (Poly poly : polygons) {
+			poly.render(graphics, camera, screenSize, Mathf.PI/4);
+		}
+		*/
+		
+		tree.render(graphics, camera, screenSize, Mathf.PI/4);
+		
+		long frameTime = (System.currentTimeMillis() - lastRepaint); 
+
+		frameCount++;			
+		if(frameCount >= 15)
+		{
+			float fps = 1000.0f*frameCount/(System.currentTimeMillis() - lastFPSCheck);
+			//System.out.println(fps);
+			lastFPSCheck = System.currentTimeMillis();
+			frameCount = 0;
+		}
+		
+		if(frameTime < 1000.0/120.0)
+		{
+			try {
+				Thread.sleep((long) (1000.0/120.0 - frameTime));
+			} catch (InterruptedException e) {
+				System.out.println(e);
+			}	
+		}
+				
+		lastRepaint = currentTime;
+		
+		//It looks like this doesn't call us directly so it's okay
+		repaint();
+	}
+	
+	private void centerMouse() {
+		try {
+			Robot robot = new Robot();
+			robot.mouseMove((int)screenSize.getWidth()/2, (int)screenSize.getHeight()/2);
+		} catch (AWTException e) {
+			System.out.println(e);
+		}
+	}
+	
+	protected void processMouseMotionEvent(MouseEvent event) {
+		yawAngle += (event.getXOnScreen() - (int)screenSize.getWidth()/2)*sensitivity;
+		pitchAngle -= (event.getYOnScreen() - (int)screenSize.getHeight()/2)*sensitivity;
+		
+		if (pitchAngle > 80*Mathf.PI/180) {
+			pitchAngle = 80*Mathf.PI/180;
+		} else if (pitchAngle < -80*Mathf.PI/180){
+			pitchAngle = -80*Mathf.PI/180;
+		}
+		
+		centerMouse();
+	}
+	
+	protected void processKeyEvent(KeyEvent event) {
+		if (event.getID() == KeyEvent.KEY_PRESSED) {
+			switch (event.getKeyCode()) {
+			case KeyEvent.VK_W:
+				moveZ = 1;
+				break;
+			case KeyEvent.VK_A:
+				moveX = 1;
+				break;
+			case KeyEvent.VK_S:
+				moveZ = -1;
+				break;
+			case KeyEvent.VK_D:
+				moveX = -1;
+				break;
+			default:
+				break;
+			}
+		} else {
+			switch (event.getKeyCode()) {
+			case KeyEvent.VK_W:
+				if (moveZ == 1)
+				moveZ = 0;
+				break;
+			case KeyEvent.VK_A:
+				if (moveX == 1)
+					moveX = 0;
+				break;
+			case KeyEvent.VK_S:
+				if (moveZ == -1)
+					moveZ = 0;
+				break;
+			case KeyEvent.VK_D:
+				if (moveX == -1)
+					moveX = 0;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+}
