@@ -139,6 +139,10 @@ public class Game extends JPanel {
 			case KeyEvent.VK_D:
 				moveX = -1;
 				break;
+			//exits the game
+			case KeyEvent.VK_ESCAPE:
+				System.exit(0);
+				break;
 			default:
 				break;
 			}
