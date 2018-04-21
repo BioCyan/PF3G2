@@ -1,6 +1,7 @@
 package math;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Poly {
 	private Vector[] vertices;
@@ -48,5 +49,39 @@ public class Poly {
 		graphics.fillPolygon(polygon);
 		graphics.setColor(Color.BLACK);
 		graphics.drawPolygon(polygon);
+	}
+	
+	public Poly clip(Plane plane, boolean side) {
+		ArrayList<Vector> newVerts = new ArrayList<Vector>();
+		for (int i = 0; i < vertices.length; i++) {
+			Vector current = vertices[i];
+			float currentDist = plane.distance(current);
+			if ((currentDist > 0) == side) {
+				newVerts.add(current);
+			} else {
+				Vector prev = vertices[(i + vertices.length - 1) % vertices.length];
+				Vector next = vertices[(i + 1) % vertices.length];
+				float prevDist = plane.distance(prev);
+				float nextDist = plane.distance(next);
+				
+				if ((prevDist > 0) == side) {
+					float interp = currentDist/(currentDist - prevDist);
+					newVerts.add(current.times(1 - interp).plus(prev.times(interp)));
+				}
+				if ((nextDist > 0) == side) {
+					float interp = currentDist/(currentDist - nextDist);
+					newVerts.add(current.times(1 - interp).plus(next.times(interp)));
+				}
+			}
+		}
+		
+		Vector[] vertArray = new Vector[newVerts.size()];
+		int i = 0;
+		for (Vector vert : vertArray) {
+			vertArray[i] = vert;
+			i++;
+		}
+		
+		return new Poly(vertArray, color);
 	}
 }
