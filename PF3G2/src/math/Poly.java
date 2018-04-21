@@ -17,38 +17,28 @@ public class Poly {
 		float x = (float)screenSize.getWidth()/2;
 		float y = (float)screenSize.getHeight()/2;
 		
-		float nearPlane = 1.0f/32;
+		Plane nearPlane = new Plane(3, 1.0f/32);
+		Poly renderPoly = project(camera).clip(nearPlane, true);
 		
 		Polygon polygon = new Polygon();
-		for (int i = 0; i < vertices.length; i++) {
-			Vector v = camera.worldToLocal(vertices[i]);
-			
-			if (v.z() >= nearPlane) {
-				polygon.addPoint((int)(-v.x()/v.z()*y*fov + x),
-						(int)(-v.y()/v.z()*y*fov + y));
-			} else {
-				Vector prev = camera.worldToLocal(
-						vertices[(i + vertices.length - 1) % vertices.length]);
-				Vector next = camera.worldToLocal(vertices[(i + 1) % vertices.length]);
-				
-				if (prev.z() >= nearPlane) {
-					float interp = (v.z() - nearPlane)/(v.z() - prev.z());
-					Vector a = v.times(1 - interp).plus(prev.times(interp));
-					polygon.addPoint((int)(-a.x()/a.z()*y*fov + x),
-							(int)(-a.y()/a.z()*y*fov + y));
-				}
-				if (next.z() >= nearPlane) {
-					float interp = (v.z() - nearPlane)/(v.z() - next.z());
-					Vector a = v.times(1 - interp).plus(next.times(interp));
-					polygon.addPoint((int)(-a.x()/a.z()*y*fov + x),
-							(int)(-a.y()/a.z()*y*fov + y));
-				}
-			}
+		for (int i = 0; i < renderPoly.vertices.length; i++) {
+			Vector v = renderPoly.vertices[i];
+			polygon.addPoint((int)(-v.x()/v.z()*y*fov + x), (int)(-v.y()/v.z()*y*fov + y));
 		}
 		graphics.setColor(color);
 		graphics.fillPolygon(polygon);
 		graphics.setColor(Color.BLACK);
 		graphics.drawPolygon(polygon);
+	}
+	
+	public Poly project(Transform camera) {
+		Vector[] newVerts = new Vector[vertices.length];
+		for (int i = 0; i < vertices.length; i++) {
+			Vector vert = vertices[i];
+			newVerts[i] = camera.worldToLocal(vert);
+		}
+		
+		return new Poly(newVerts, color);
 	}
 	
 	public Poly clip(Plane plane, boolean side) {
@@ -77,7 +67,7 @@ public class Poly {
 		
 		Vector[] vertArray = new Vector[newVerts.size()];
 		int i = 0;
-		for (Vector vert : vertArray) {
+		for (Vector vert : newVerts) {
 			vertArray[i] = vert;
 			i++;
 		}
