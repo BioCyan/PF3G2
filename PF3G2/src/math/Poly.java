@@ -13,12 +13,16 @@ public class Poly {
 	}
 	
 	public void render(Graphics graphics, Transform camera, Dimension screenSize, float fov) {
-		fov = Mathf.tan(fov);
+		fov = Mathf.tan(fov*Mathf.PI/360.0f);
 		float x = (float)screenSize.getWidth()/2;
 		float y = (float)screenSize.getHeight()/2;
 		
 		Plane nearPlane = new Plane(3, 1.0f/32);
 		Poly renderPoly = project(camera).clip(nearPlane, true);
+		
+		if (renderPoly == null) {
+			return;
+		}
 		
 		Polygon polygon = new Polygon();
 		for (int i = 0; i < renderPoly.vertices.length; i++) {
@@ -63,6 +67,10 @@ public class Poly {
 					newVerts.add(current.times(1 - interp).plus(next.times(interp)));
 				}
 			}
+		}
+		
+		if (newVerts.size() == 0) {
+			return null;
 		}
 		
 		Vector[] vertArray = new Vector[newVerts.size()];

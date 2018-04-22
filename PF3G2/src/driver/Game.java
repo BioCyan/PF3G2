@@ -75,7 +75,7 @@ public class Game extends JPanel {
 		}
 		*/
 		
-		tree.render(graphics, camera, screenSize, Mathf.PI/4);
+		tree.render(graphics, camera, screenSize, 90);
 		
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 
