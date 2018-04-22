@@ -30,6 +30,14 @@ public class Vector {
 		}
 	}
 	
+	public float length() {
+		return Mathf.sqrt(x*x + y*y + z*z);
+	}
+	
+	public Vector unit() {
+		return times(1 / length());
+	}
+	
 	public float dot(Vector v) {
 		return x*v.x() + y*v.y() + z*v.z();
 	}

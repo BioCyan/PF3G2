@@ -31,8 +31,16 @@ public class Poly {
 		}
 		graphics.setColor(color);
 		graphics.fillPolygon(polygon);
-		graphics.setColor(Color.BLACK);
-		graphics.drawPolygon(polygon);
+		//graphics.setColor(Color.BLACK);
+		//graphics.drawPolygon(polygon);
+	}
+	
+	public Plane getPlane() {
+		Vector normal = (vertices[0].minus(vertices[1]))
+				.cross(vertices[0].minus(vertices[2]))
+				.unit();;
+		float position = vertices[0].dot(normal);
+		return new Plane(normal, position);
 	}
 	
 	public Poly project(Transform camera) {

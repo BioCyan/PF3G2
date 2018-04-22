@@ -11,6 +11,9 @@ public class Cube {
 			float x = (i % 2) - 0.5f;
 			float y = (i / 2 % 2) - 0.5f;
 			float z = (i / 4 % 2) - 0.5f;
+			x *= size;
+			y *= size;
+			z *= size;
 			vertices[i] = pos.plus(new Vector(x, y, z));
 		}
 		int skip = 1;

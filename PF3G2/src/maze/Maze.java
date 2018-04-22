@@ -184,7 +184,9 @@ public class Maze {
 			for (int j = -1; j <= grid[0].length; j++) {
 				Cell cell = new Cell(i, j);
 				if (!cell.valid() || !cell.check()) {
-					for (Poly poly : Cube.makeCube(1, new Vector(i - midX, 0, j - midY), color)) {
+					Color randColor = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+					float size = (float)Math.random() + 0.5f;
+					for (Poly poly : Cube.makeCube(size, new Vector(i - midX, 0, j - midY), randColor)) {
 						result.add(poly);
 					}
 				}
