@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import maze.Maze;
 import math.*;
 import model.*;
+import userMovement.UserMovement;
 
 public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -24,12 +25,14 @@ public class Game extends JPanel {
 	private float yawAngle = 0;
 	private float pitchAngle = 0;
 	private int frameCount = 0;
-	private int moveX;
-	private int moveZ;
-	private int moveY;
+	private float moveX;
+	private float moveZ;
+	private float moveY;
 	private Vector cameraPos;
 	private float moveSpeed;
 	private BSPTree tree;
+	private final float MAXSPEED = 1;
+	UserMovement movement = new UserMovement();
 	
 	public Game(Dimension screenSize) {
 		setFocusable(true);
@@ -140,16 +143,28 @@ public class Game extends JPanel {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_W:
-				moveZ = 1;
+				while(movement.getMovement().z()<MAXSPEED) {
+					movement.moveFoward();
+					moveZ = movement.getMovement().z();
+				}
 				break;
 			case KeyEvent.VK_A:
-				moveX = 1;
+				while(movement.getMovement().x()<MAXSPEED) {
+					movement.moveLeft();
+					moveX = movement.getMovement().x();
+				}
 				break;
 			case KeyEvent.VK_S:
-				moveZ = -1;
+				while(movement.getMovement().z()>-MAXSPEED) {
+					movement.moveBackward();
+					moveZ = movement.getMovement().z();
+				}
 				break;
 			case KeyEvent.VK_D:
-				moveX = -1;
+				while(movement.getMovement().x()>-MAXSPEED) {
+					movement.moveRight();
+					moveX = movement.getMovement().x();
+				}
 				break;
 			//adds the spacebar to move you up
 			case KeyEvent.VK_SPACE:
@@ -165,20 +180,22 @@ public class Game extends JPanel {
 		} else if (event.getID() == KeyEvent.KEY_RELEASED){
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_W:
-				if (moveZ == 1)
-				moveZ = 0;
+			case KeyEvent.VK_S:
+				if (moveZ<0||moveZ>0) {
+					while(moveZ<0||moveZ>0) {
+						movement.stopZ();
+						moveZ = movement.getMovement().z();
+					}
+				}
 				break;
 			case KeyEvent.VK_A:
-				if (moveX == 1)
-					moveX = 0;
-				break;
-			case KeyEvent.VK_S:
-				if (moveZ == -1)
-					moveZ = 0;
-				break;
 			case KeyEvent.VK_D:
-				if (moveX == -1)
-					moveX = 0;
+				if (moveX<0||moveX>0){
+					while(moveX<0||moveX>0) {
+						movement.stopX();
+						moveX = movement.getMovement().x();
+					}
+				}
 				break;
 			case KeyEvent.VK_SPACE:
 				if(moveY == 1)

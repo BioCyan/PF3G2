@@ -2,52 +2,55 @@ package userMovement;
 
 import math.Vector;
 
-public class userMovement {
+public class UserMovement {
 	private Vector movement;
-	private final float ACCELERATIONOFGRAVITY=0.5f,FRICTION=0.3f,ACCELERATION=0.2f,MAXSPEED=1;
+	private final float ACCELERATIONOFGRAVITY=0.5f,FRICTION=0.05f,ACCELERATION=0.02f;
 	
-	public userMovement() {
+	public UserMovement() {
 		movement = new Vector(0,0,0);
 	}
 	
-	public Vector Movement() {return movement;}
+	public Vector getMovement() {return movement;}
 	
 	public void setMovement(Vector movement) {this.movement=movement;}
 	
 	public void jump() {movement.plus(new Vector (0,2,0));}
 	public void fall() {movement.minus(new Vector (0,ACCELERATIONOFGRAVITY,0));}
 	public void moveFoward() {
-		if(movement.z()<=1)
-			movement.plus(new Vector (0,0,ACCELERATION));
-		else
-			movement = new Vector(0,0,MAXSPEED);
+			movement = movement.plus(new Vector (0,0,ACCELERATION));
 	}
 	public void moveBackward() {
-		if(movement.z()>=-1)
-			movement.minus(new Vector (0,0,ACCELERATION));
-		else
-			movement = new Vector(0,0,-MAXSPEED);
+			movement = movement.minus(new Vector (0,0,ACCELERATION));
 	}
 	public void moveRight() {
-		if(movement.x()<=1)
-			movement.minus(new Vector (ACCELERATION,0,0));
-		else
-			movement = new Vector(MAXSPEED,0,0);
+			movement = movement.minus(new Vector (ACCELERATION,0,0));
 	}
 	public void moveLeft() {
-		if(movement.x()>=-1)
-			movement.minus(new Vector (ACCELERATION,0,0));
-		else
-			movement = new Vector(-MAXSPEED,0,0);
+			movement = movement.plus(new Vector (ACCELERATION,0,0));
 	}
 	
-	public void stop() {	
-		float originX = movement.x(), originZ = movement.z();
-		if(movement.length()!=0) {
-			movement.minus(movement.times(FRICTION/movement.length()));
-		if(originX*movement.x()<0||originZ*movement.z()<0)
+	public void stopX() {	
+		float originX = movement.x();
+		if(movement.x()!=0) {
+			if(movement.x()>0)
+				movement = movement.minus(new Vector(FRICTION,0,0));
+			else if(movement.x()<0)
+				movement = movement.plus(new Vector(FRICTION,0,0));
+		if(originX*movement.x()<0)
 			movement = new Vector(0,0,0);
 		}	
+	}
+	
+	public void stopZ() {
+		float originZ = movement.z();
+		if(movement.z()!=0) {
+			if(movement.z()>0)
+				movement = movement.minus(new Vector(0,0,FRICTION));
+			else if(movement.z()<0)
+				movement = movement.plus(new Vector(0,0,FRICTION));
+			if(originZ*movement.z()<0) 
+				movement = new Vector(0,0,0);
+		}
 	}
 	
 }
