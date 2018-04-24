@@ -26,6 +26,7 @@ public class Game extends JPanel {
 	private int frameCount = 0;
 	private int moveX;
 	private int moveZ;
+	private int moveY;
 	private Vector cameraPos;
 	private float moveSpeed;
 	private BSPTree tree;
@@ -64,7 +65,7 @@ public class Game extends JPanel {
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
-		Vector movement = rot.localToWorld((new Vector(moveX, 0, moveZ)).times(moveSpeed*deltaTime));
+		Vector movement = rot.localToWorld((new Vector(moveX, moveY, moveZ)).times(moveSpeed*deltaTime));
 		cameraPos = cameraPos.plus(movement);
 		camera = new Transform(cameraPos, rot);
 		
@@ -139,6 +140,10 @@ public class Game extends JPanel {
 			case KeyEvent.VK_D:
 				moveX = -1;
 				break;
+			//adds the spacebar to move you up
+			case KeyEvent.VK_SPACE:
+				moveY = 1;
+				break;
 			//exits the game
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
@@ -146,7 +151,7 @@ public class Game extends JPanel {
 			default:
 				break;
 			}
-		} else {
+		} else if (event.getID() == KeyEvent.KEY_RELEASED){
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_W:
 				if (moveZ == 1)
@@ -163,6 +168,10 @@ public class Game extends JPanel {
 			case KeyEvent.VK_D:
 				if (moveX == -1)
 					moveX = 0;
+				break;
+			case KeyEvent.VK_SPACE:
+				if(moveY == 1)
+					moveY = 0;
 				break;
 			default:
 				break;
