@@ -34,10 +34,23 @@ public class Game extends JPanel {
 	public Game(Dimension screenSize) {
 		setFocusable(true);
 		
+		Poly[] tempPolys = (new Block(new Vector(0, 0, 0), new Vector(4, 4, 4))).getPolys(Color.BLUE); 
+		polygons = new ArrayList<Poly>();
+		for (int i = 0; i < tempPolys.length; i++) {
+			polygons.add(tempPolys[i]);
+		}
+		tempPolys = (new Block(new Vector(2, 2, -6), new Vector(6, 6, -2))).getPolys(Color.GREEN); 
+		for (int i = 0; i < tempPolys.length; i++) {
+			polygons.add(tempPolys[i]);
+		}
+		
 		moveSpeed = 4;
 		Maze maze = new Maze(32, 32);
 		polygons = maze.getPolys(Color.BLUE);
+		//tree = new BSPTree(polygons);
+		
 		tree = maze.genBSP();
+		
 		cameraPos = new Vector(-16, 0, -16);
 		camera = new Transform();
 		this.screenSize = screenSize;
@@ -69,13 +82,11 @@ public class Game extends JPanel {
 		cameraPos = cameraPos.plus(movement);
 		camera = new Transform(cameraPos, rot);
 		
-		/*
 		for (Poly poly : polygons) {
-			poly.render(graphics, camera, screenSize, Mathf.PI/4);
+			//poly.render(graphics, camera, screenSize, 90);
 		}
-		*/
 		
-		tree.render(graphics, camera, screenSize, Mathf.PI/4);
+		tree.render(graphics, camera, screenSize, 90);
 		
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 

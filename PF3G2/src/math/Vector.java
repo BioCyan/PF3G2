@@ -17,6 +17,27 @@ public class Vector {
 	public float y() {return y;}
 	public float z() {return z;}
 	
+	public float get(int axis) {
+		switch(axis) {
+		case 1:
+			return x;
+		case 2:
+			return y;
+		case 3:
+			return z;
+		default:
+			throw new RuntimeException("Tried to access nonexistant axis " + axis);
+		}
+	}
+	
+	public float length() {
+		return Mathf.sqrt(x*x + y*y + z*z);
+	}
+	
+	public Vector unit() {
+		return times(1 / length());
+	}
+	
 	public float dot(Vector v) {
 		return x*v.x() + y*v.y() + z*v.z();
 	}

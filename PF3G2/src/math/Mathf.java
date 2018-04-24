@@ -5,6 +5,10 @@ package math;
 public class Mathf {
 	public static final float PI = (float)Math.PI;
 
+	public static float sqrt(float x) {
+		return (float)Math.sqrt(x);
+	}
+	
 	public static float sin(float x) {
 		return (float)Math.sin(x);
 	}

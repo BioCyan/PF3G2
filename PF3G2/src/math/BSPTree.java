@@ -2,37 +2,71 @@ package math;
 
 import java.awt.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class BSPTree {
-	private int axis; //orientation of separating plane
-	private float distance; //plane distance from origin along its normal
+	private Plane plane;
+	//private int axis; //orientation of separating plane
+	//private float distance; //plane distance from origin along its normal
 	private List<Poly> polygons;
 	private BSPTree near;
 	private BSPTree far;
 	
 	public BSPTree(int axis, float distance, List<Poly> polygons, BSPTree near, BSPTree far) {
-		this.axis = axis;
-		this.distance = distance;
+		plane = new Plane(axis, distance);
 		this.polygons = polygons;
 		this.near = near;
 		this.far = far;
 	}
 	
+	public BSPTree(Plane plane, List<Poly> polygons, BSPTree near, BSPTree far) {
+		this.plane = plane;
+		this.polygons = polygons;
+		this.near = near;
+		this.far = far;
+	}
+	
+	public BSPTree(List<Poly> polys) {
+		Plane splitter = polys.get(0).getPlane();
+		List<Poly> far = new ArrayList<Poly>();
+		List<Poly> near = new ArrayList<Poly>();
+		List<Poly> middle = new ArrayList<Poly>();
+		for (Poly poly : polys) {
+			if (poly == polys.get(0)) {
+				//TODO: actually add all coplanar polys
+				middle.add(poly);
+			} else {
+				Poly farAdd = poly.clip(splitter, true);
+				Poly nearAdd = poly.clip(splitter, false);
+				
+				if (farAdd != null) {
+					far.add(farAdd);
+				}
+				if (nearAdd != null) {
+					near.add(nearAdd);
+				}
+			}
+		}
+		
+		this.plane = splitter;
+		this.polygons = middle;
+		
+		if (near.size() == 0) {
+			this.near = null;
+		} else {
+			this.near = new BSPTree(near);
+		}
+		
+		if (far.size() == 0) {
+			this.far = null;
+		} else {
+			this.far = new BSPTree(far);
+		}
+	}
+	
 	public void render(Graphics graphics, Transform camera, Dimension screenSize, float fov) {
 		Vector camPos = camera.localToWorld(new Vector());
-		float dist = 0;
-		switch (axis) {
-		case 1:
-			dist = camPos.x();
-			break;
-		case 2:
-			dist = camPos.y();
-			break;
-		case 3:
-			dist = camPos.z();
-			break;
-		}
-		dist -= distance;
+		float dist = plane.distance(camPos);
 		
 		BSPTree first, last;
 		if (dist < 0) {
