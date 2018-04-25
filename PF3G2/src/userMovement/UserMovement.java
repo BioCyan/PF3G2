@@ -29,19 +29,16 @@ public class UserMovement {
 			movement = movement.plus(new Vector (ACCELERATION,0,0));
 	}
 	
-	public void stopX() {	
+	public void stop() {
 		float originX = movement.x();
 		if(movement.x()!=0) {
 			if(movement.x()>0)
 				movement = movement.minus(new Vector(FRICTION,0,0));
 			else if(movement.x()<0)
 				movement = movement.plus(new Vector(FRICTION,0,0));
-		if(originX*movement.x()<0)
+			if(originX*movement.x()<0)
 			movement = new Vector(0,0,0);
 		}	
-	}
-	
-	public void stopZ() {
 		float originZ = movement.z();
 		if(movement.z()!=0) {
 			if(movement.z()>0)
@@ -52,5 +49,4 @@ public class UserMovement {
 				movement = new Vector(0,0,0);
 		}
 	}
-	
 }

@@ -183,7 +183,7 @@ public class Game extends JPanel {
 			case KeyEvent.VK_S:
 				if (moveZ<0||moveZ>0) {
 					while(moveZ<0||moveZ>0) {
-						movement.stopZ();
+						movement.stop();
 						moveZ = movement.getMovement().z();
 					}
 				}
@@ -192,7 +192,7 @@ public class Game extends JPanel {
 			case KeyEvent.VK_D:
 				if (moveX<0||moveX>0){
 					while(moveX<0||moveX>0) {
-						movement.stopX();
+						movement.stop();
 						moveX = movement.getMovement().x();
 					}
 				}
