@@ -80,8 +80,7 @@ public class Game extends JPanel {
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
-		Vector wishMove;
-		wishMove = rot.localToWorld(new Vector(moveX, moveY, moveZ));
+		Vector wishMove = rot.localToWorld(new Vector(moveX, moveY, moveZ));
 		movement.friction(deltaTime);
 		movement.accelerate(deltaTime, wishMove);
 		movement.fall(deltaTime);
@@ -89,9 +88,10 @@ public class Game extends JPanel {
 		
 		cameraPos = cameraPos.plus(movement.getMovement().times(deltaTime));
 		
-		//preventing the player to go below ground level (JT)
+		//preventing the player to go below ground level and rest the y value to 0 (JT)
 		if(cameraPos.y()<0) {
 			cameraPos = cameraPos.minus(new Vector(0,cameraPos.y(),0));
+			movement.setMovement(new Vector(movement.getMovement().x(),0,movement.getMovement().z()));
 		}
 		
 		camera = new Transform(cameraPos, rot);
@@ -167,8 +167,7 @@ public class Game extends JPanel {
 				break;
 			//adds the spacebar to move you up
 			case KeyEvent.VK_SPACE:
-				movement.jump();
-				moveY = movement.getMovement().y();
+				moveY = 1;
 				break;
 			//exits the game
 			case KeyEvent.VK_ESCAPE:
