@@ -10,13 +10,13 @@ import java.awt.image.BufferedImage;
 import maze.Maze;
 import math.*;
 import model.*;
+import player.Player;
 import player.UserMovement;
 
 public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private List<Poly> polygons;
-	private Transform camera;
 	private Dimension screenSize;
 	private long time;
 	private long lastFPSCheck;
@@ -27,11 +27,9 @@ public class Game extends JPanel {
 	private int frameCount = 0;
 	private float moveX;
 	private float moveZ;
-	private float moveY;
-	private Vector cameraPos;
 	private float moveSpeed;
 	private BSPTree tree;
-	UserMovement movement = new UserMovement();
+	Player player;
 	
 	public Game(Dimension screenSize) {
 		setFocusable(true);
@@ -52,9 +50,7 @@ public class Game extends JPanel {
 		tree = new BSPTree(polygons);
 		
 		//tree = maze.genBSP();
-		
-		cameraPos = new Vector(0, 1, 0);
-		camera = new Transform();
+		player = new Player();
 		this.screenSize = screenSize;
 		hideCursor();
 		centerMouse();
@@ -79,28 +75,9 @@ public class Game extends JPanel {
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		
-		Rotation rot = new Rotation(yawAngle, pitchAngle);
-		Vector wishMove = rot.localToWorld(new Vector(moveX, moveY, moveZ));
-		movement.friction(deltaTime);
-		movement.accelerate(deltaTime, wishMove);
-		movement.fall(deltaTime);
-
+		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle);
 		
-		cameraPos = cameraPos.plus(movement.getMovement().times(deltaTime));
-		
-		//preventing the player to go below ground level and rest the y value to 0 (JT)
-		if(cameraPos.y()<0) {
-			cameraPos = cameraPos.minus(new Vector(0,cameraPos.y(),0));
-			movement.setMovement(new Vector(movement.getMovement().x(),0,movement.getMovement().z()));
-		}
-		
-		camera = new Transform(cameraPos, rot);
-		
-		for (Poly poly : polygons) {
-			//poly.render(graphics, camera, screenSize, 90);
-		}
-		
-		tree.render(graphics, camera, screenSize, 90);
+		tree.render(graphics, player.getCamera(), screenSize, 90);
 		
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 
@@ -167,7 +144,7 @@ public class Game extends JPanel {
 				break;
 			//adds the spacebar to move you up
 			case KeyEvent.VK_SPACE:
-				movement.jump();
+				player.jump();
 				break;
 			//exits the game
 			case KeyEvent.VK_ESCAPE:
