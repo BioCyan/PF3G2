@@ -39,9 +39,9 @@ public class Player {
 		}
 		camera = new Transform(position, rot);
 	}
+
 	public void jump() {
 		if(position.y()==0)
 			movement.jump();
 		}
-
 }
