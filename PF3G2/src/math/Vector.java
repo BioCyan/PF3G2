@@ -35,7 +35,11 @@ public class Vector {
 	}
 	
 	public Vector unit() {
-		return times(1 / length());
+		if (length() == 0) {
+			return new Vector();
+		} else {
+			return times(1 / length());
+		}
 	}
 	
 	public float dot(Vector v) {

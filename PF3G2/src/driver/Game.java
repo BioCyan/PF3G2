@@ -31,7 +31,6 @@ public class Game extends JPanel {
 	private Vector cameraPos;
 	private float moveSpeed;
 	private BSPTree tree;
-	private final float MAXSPEED = 1;
 	UserMovement movement = new UserMovement();
 	
 	public Game(Dimension screenSize) {
@@ -48,13 +47,13 @@ public class Game extends JPanel {
 		}
 		
 		moveSpeed = 4;
-		Maze maze = new Maze(32, 32);
+		Maze maze = new Maze(8, 8);
 		polygons = maze.getPolys(Color.BLUE);
-		//tree = new BSPTree(polygons);
+		tree = new BSPTree(polygons);
 		
-		tree = maze.genBSP();
+		//tree = maze.genBSP();
 		
-		cameraPos = new Vector(-16, 0, -16);
+		cameraPos = new Vector(0, 1, 0);
 		camera = new Transform();
 		this.screenSize = screenSize;
 		hideCursor();
@@ -81,8 +80,11 @@ public class Game extends JPanel {
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
-		Vector movement = rot.localToWorld((new Vector(moveX, moveY, moveZ)).times(moveSpeed*deltaTime));
-		cameraPos = cameraPos.plus(movement);
+		Vector wishMove = rot.localToWorld(new Vector(moveX, moveY, moveZ));
+		movement.friction(deltaTime);
+		movement.accelerate(deltaTime, wishMove);
+		
+		cameraPos = cameraPos.plus(movement.getMovement().times(deltaTime));
 		camera = new Transform(cameraPos, rot);
 		
 		for (Poly poly : polygons) {
@@ -143,28 +145,16 @@ public class Game extends JPanel {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_W:
-				while(movement.getMovement().z()<MAXSPEED) {
-					movement.moveFoward();
-					moveZ = movement.getMovement().z();
-				}
+				moveZ= 1;
 				break;
 			case KeyEvent.VK_A:
-				while(movement.getMovement().x()<MAXSPEED) {
-					movement.moveLeft();
-					moveX = movement.getMovement().x();
-				}
+				moveX = 1;
 				break;
 			case KeyEvent.VK_S:
-				while(movement.getMovement().z()>-MAXSPEED) {
-					movement.moveBackward();
-					moveZ = movement.getMovement().z();
-				}
+				moveZ = -1;
 				break;
 			case KeyEvent.VK_D:
-				while(movement.getMovement().x()>-MAXSPEED) {
-					movement.moveRight();
-					moveX = movement.getMovement().x();
-				}
+				moveX = -1;
 				break;
 			//adds the spacebar to move you up
 			case KeyEvent.VK_SPACE:
@@ -180,26 +170,28 @@ public class Game extends JPanel {
 		} else if (event.getID() == KeyEvent.KEY_RELEASED){
 			switch (event.getKeyCode()) {
 			case KeyEvent.VK_W:
-			case KeyEvent.VK_S:
-				if (moveZ<0||moveZ>0) {
-					while(moveZ<0||moveZ>0) {
-						movement.stop();
-						moveZ = movement.getMovement().z();
-					}
+				if (moveZ == 1) {
+					moveZ = 0;
 				}
 				break;
 			case KeyEvent.VK_A:
+				if (moveX == 1) {
+					moveX = 0;
+				}
+			case KeyEvent.VK_S:
+				if (moveZ == -1) {
+					moveZ = 0;
+				}
+				break;
 			case KeyEvent.VK_D:
-				if (moveX<0||moveX>0){
-					while(moveX<0||moveX>0) {
-						movement.stop();
-						moveX = movement.getMovement().x();
-					}
+				if (moveX == -1) {
+					moveX = 0;
 				}
 				break;
 			case KeyEvent.VK_SPACE:
-				if(moveY == 1)
+				if(moveY == 1) {
 					moveY = 0;
+				}
 				break;
 			default:
 				break;
