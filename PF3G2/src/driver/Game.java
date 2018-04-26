@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import maze.Maze;
 import math.*;
 import model.*;
-import userMovement.UserMovement;
+import player.UserMovement;
 
 public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -80,11 +80,20 @@ public class Game extends JPanel {
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
-		Vector wishMove = rot.localToWorld(new Vector(moveX, moveY, moveZ));
+		Vector wishMove;
+		wishMove = rot.localToWorld(new Vector(moveX, moveY, moveZ));
 		movement.friction(deltaTime);
 		movement.accelerate(deltaTime, wishMove);
+		movement.fall(deltaTime);
+
 		
 		cameraPos = cameraPos.plus(movement.getMovement().times(deltaTime));
+		
+		//preventing the player to go below ground level (JT)
+		if(cameraPos.y()<0) {
+			cameraPos = cameraPos.minus(new Vector(0,cameraPos.y(),0));
+		}
+		
 		camera = new Transform(cameraPos, rot);
 		
 		for (Poly poly : polygons) {
@@ -158,7 +167,8 @@ public class Game extends JPanel {
 				break;
 			//adds the spacebar to move you up
 			case KeyEvent.VK_SPACE:
-				moveY = 1;
+				movement.jump();
+				moveY = movement.getMovement().y();
 				break;
 			//exits the game
 			case KeyEvent.VK_ESCAPE:
