@@ -4,7 +4,7 @@ import math.Vector;
 
 public class UserMovement {
 	private Vector movement;
-	private final float ACCELERATIONOFGRAVITY=5,FRICTION=5,ACCELERATION=7, MAXSPEED=10;
+	private final float ACCELERATIONOFGRAVITY=5,FRICTION=5,ACCELERATION=7, MAXSPEED=10, JUMPSPEED = 2;
 	public UserMovement() {
 		movement = new Vector(0,0,0);
 	}
@@ -13,7 +13,7 @@ public class UserMovement {
 	
 	public void setMovement(Vector movement) {this.movement=movement;}
 	
-	public void jump() {movement = movement.plus(new Vector (0,10,0));}
+	public void jump() {movement = movement.plus(new Vector (0,JUMPSPEED,0));}
 	public void fall(float deltaTime) {
 		movement = movement.minus(new Vector (0,ACCELERATIONOFGRAVITY*deltaTime,0));
 		}

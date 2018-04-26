@@ -167,7 +167,7 @@ public class Game extends JPanel {
 				break;
 			//adds the spacebar to move you up
 			case KeyEvent.VK_SPACE:
-				moveY = 1;
+				movement.jump();
 				break;
 			//exits the game
 			case KeyEvent.VK_ESCAPE:
@@ -195,11 +195,6 @@ public class Game extends JPanel {
 			case KeyEvent.VK_D:
 				if (moveX == -1) {
 					moveX = 0;
-				}
-				break;
-			case KeyEvent.VK_SPACE:
-				if(moveY == 1) {
-					moveY = 0;
 				}
 				break;
 			default:
