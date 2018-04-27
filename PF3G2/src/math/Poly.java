@@ -23,15 +23,14 @@ public class Poly {
 		if (renderPoly == null) {
 			return;
 		}
-		
-		Polygon polygon = new Polygon();
-		Vector[] vertices = renderPoly.vertices;
 		if (renderPoly.getPlane().distance(new Vector()) < 0) {
 			return;
 		}
+		
+		Polygon polygon = new Polygon();
+		Vector[] vertices = renderPoly.vertices;
 		for (int i = 0; i < vertices.length; i++) {
 			Vector v = vertices[i];
-			Vector nextV = vertices[(i + 1) % vertices.length];
 			int xCoord = (int)(-v.x()/v.z()*y*fov + x);
 			int yCoord = (int)(-v.y()/v.z()*y*fov + y);
 			polygon.addPoint(xCoord, yCoord);
