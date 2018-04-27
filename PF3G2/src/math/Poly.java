@@ -25,20 +25,27 @@ public class Poly {
 		}
 		
 		Polygon polygon = new Polygon();
-		for (int i = 0; i < renderPoly.vertices.length; i++) {
-			Vector v = renderPoly.vertices[i];
-			polygon.addPoint((int)(-v.x()/v.z()*y*fov + x), (int)(-v.y()/v.z()*y*fov + y));
+		Vector[] vertices = renderPoly.vertices;
+		if (renderPoly.getPlane().distance(new Vector()) < 0) {
+			return;
+		}
+		for (int i = 0; i < vertices.length; i++) {
+			Vector v = vertices[i];
+			Vector nextV = vertices[(i + 1) % vertices.length];
+			int xCoord = (int)(-v.x()/v.z()*y*fov + x);
+			int yCoord = (int)(-v.y()/v.z()*y*fov + y);
+			polygon.addPoint(xCoord, yCoord);
 		}
 		graphics.setColor(color);
 		graphics.fillPolygon(polygon);
-		//graphics.setColor(Color.BLACK);
-		//graphics.drawPolygon(polygon);
+		graphics.setColor(color);
+		graphics.drawPolygon(polygon);
 	}
 	
 	public Plane getPlane() {
 		Vector normal = (vertices[0].minus(vertices[1]))
 				.cross(vertices[0].minus(vertices[2]))
-				.unit();;
+				.unit();
 		float position = vertices[0].dot(normal);
 		return new Plane(normal, position);
 	}

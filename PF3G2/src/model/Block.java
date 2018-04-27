@@ -1,9 +1,12 @@
 package model;
 
+import java.util.Random;
 import math.*;
 import java.awt.*;
 
 public class Block {
+	private static Random rand = new Random();
+	
 	private Vector mins;
 	private Vector maxs;
 	
@@ -47,13 +50,15 @@ public class Block {
 				index += digits[(axis + 2) % 3] * side3;
 				polyVerts[j] = verts[index];
 				
-				if (j % 2 == 1) {
+				if (j % 2 != side1) {
 					side2 = 1 - side2;
 				} else {
 					side3 = 1 - side3;
 				}
 			}
-			result[i] = new Poly(polyVerts, color);
+			
+			Color randColor = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+			result[i] = new Poly(polyVerts, randColor);
 		}
 		
 		return result;

@@ -3,8 +3,11 @@ package math;
 import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BSPTree {
+	private static Random rand = new Random();
+	
 	private Plane plane;
 	//private int axis; //orientation of separating plane
 	//private float distance; //plane distance from origin along its normal
@@ -27,12 +30,13 @@ public class BSPTree {
 	}
 	
 	public BSPTree(List<Poly> polys) {
-		Plane splitter = polys.get(0).getPlane();
+		int splitIndex = rand.nextInt(polys.size());
+		Plane splitter = polys.get(splitIndex).getPlane();
 		List<Poly> far = new ArrayList<Poly>();
 		List<Poly> near = new ArrayList<Poly>();
 		List<Poly> middle = new ArrayList<Poly>();
 		for (Poly poly : polys) {
-			if (poly == polys.get(0)) {
+			if (poly == polys.get(splitIndex)) {
 				//TODO: actually add all coplanar polys
 				middle.add(poly);
 			} else {

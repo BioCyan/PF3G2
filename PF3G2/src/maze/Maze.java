@@ -177,6 +177,8 @@ public class Maze {
 	}
 	
 	public List<Poly> getPolys(Color color) {
+		Random rand = new Random(1);
+		
 		List<Poly> result = new ArrayList<Poly>();
 		float midX = grid.length/2.0f;
 		float midY = grid[0].length/2.0f;
@@ -185,7 +187,7 @@ public class Maze {
 				Cell cell = new Cell(i, j);
 				if (!cell.valid() || !cell.check()) {
 					Color randColor = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
-					float size = (float)Math.random() + 0.5f;
+					float size = rand.nextFloat() + 0.5f;
 					for (Poly poly : Cube.makeCube(size, new Vector(i - midX, 0, j - midY), randColor)) {
 						result.add(poly);
 					}
