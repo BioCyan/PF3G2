@@ -59,12 +59,21 @@ public class Poly {
 		return new Poly(newVerts, color);
 	}
 	
+	public boolean coplanar(Plane plane) {
+		for (int i = 0; i < vertices.length; i++) {
+			if (plane.distance(vertices[i]) != 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public Poly clip(Plane plane, boolean side) {
 		ArrayList<Vector> newVerts = new ArrayList<Vector>();
 		for (int i = 0; i < vertices.length; i++) {
 			Vector current = vertices[i];
 			float currentDist = plane.distance(current);
-			if ((currentDist > 0) == side) {
+			if (currentDist == 0 || (currentDist > 0) == side) {
 				newVerts.add(current);
 			} else {
 				Vector prev = vertices[(i + vertices.length - 1) % vertices.length];
@@ -72,18 +81,18 @@ public class Poly {
 				float prevDist = plane.distance(prev);
 				float nextDist = plane.distance(next);
 				
-				if ((prevDist > 0) == side) {
+				if (prevDist != 0 && (prevDist > 0) == side) {
 					float interp = currentDist/(currentDist - prevDist);
 					newVerts.add(current.times(1 - interp).plus(prev.times(interp)));
 				}
-				if ((nextDist > 0) == side) {
+				if (nextDist != 0 && (nextDist > 0) == side) {
 					float interp = currentDist/(currentDist - nextDist);
 					newVerts.add(current.times(1 - interp).plus(next.times(interp)));
 				}
 			}
 		}
 		
-		if (newVerts.size() == 0) {
+		if (newVerts.size() < 3) {
 			return null;
 		}
 		

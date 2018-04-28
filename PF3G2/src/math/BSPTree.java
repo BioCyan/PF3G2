@@ -36,8 +36,7 @@ public class BSPTree {
 		List<Poly> near = new ArrayList<Poly>();
 		List<Poly> middle = new ArrayList<Poly>();
 		for (Poly poly : polys) {
-			if (poly == polys.get(splitIndex)) {
-				//TODO: actually add all coplanar polys
+			if (poly == polys.get(splitIndex) || poly.coplanar(splitter)) {
 				middle.add(poly);
 			} else {
 				Poly farAdd = poly.clip(splitter, true);

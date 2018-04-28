@@ -4,7 +4,7 @@ import math.Vector;
 
 public class UserMovement {
 	private Vector movement;
-	private final float ACCELERATIONOFGRAVITY=5,FRICTION=5,ACCELERATION=7, MAXSPEED=10, JUMPSPEED = 2;
+	private final float ACCELERATIONOFGRAVITY=5,FRICTION=5,ACCELERATION=7, MAXSPEED=10, JUMPSPEED = 3;
 	public UserMovement() {
 		movement = new Vector(0,0,0);
 	}
