@@ -28,8 +28,10 @@ public class Player {
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle) {
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
 		Vector direction = rot.localToWorld(new Vector(moveX, 0, moveZ));
-		movement.friction(deltaTime);
-		movement.accelerate(deltaTime, direction);
+		if(movement.getMovement().y()==0) {
+			movement.friction(deltaTime);
+			movement.accelerate(deltaTime, direction);
+		}
 		movement.fall(deltaTime);
 		position = position.plus(movement.getMovement().times(deltaTime));
 		//preventing the player to go below ground level and rest the y value to 0 (JT)
