@@ -41,7 +41,7 @@ public class Player {
 	}
 
 	public void jump() {
-		if(position.y()==0)
+		if(movement.getMovement().y()==0)
 			movement.jump();
 		}
 }
