@@ -28,6 +28,7 @@ public class Game extends JPanel {
 	private float moveX;
 	private float moveZ;
 	private float moveSpeed;
+	private boolean start = false;
 	private BSPTree tree;
 	Player player;
 	
@@ -74,11 +75,21 @@ public class Game extends JPanel {
 		
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
-		
+		//if game has not started yet print out title and instruction to begin
+		if(!start) {
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
+			graphics.setColor(Color.cyan);
+			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
+			
+			graphics.setColor(Color.white);
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
+			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
+		}
+		if(start) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle);
 		
 		tree.render(graphics, player.getCamera(), screenSize, 90);
-		
+		}
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 
 		frameCount++;			
@@ -150,6 +161,8 @@ public class Game extends JPanel {
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
 				break;
+			case KeyEvent.VK_ENTER:
+				start = true;
 			default:
 				break;
 			}
