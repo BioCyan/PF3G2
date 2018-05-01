@@ -6,6 +6,7 @@ import java.util.Stack;
 import java.util.ArrayList;
 import java.awt.*;
 import math.*;
+import model.Block;
 import model.Cube;
 
 public class Maze {
@@ -186,11 +187,28 @@ public class Maze {
 			for (int j = -1; j <= grid[0].length; j++) {
 				Cell cell = new Cell(i, j);
 				if (!cell.valid() || !cell.check()) {
-					Color randColor = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
 					float size = rand.nextFloat() + 0.5f;
-					for (Poly poly : Cube.makeCube(size, new Vector(i - midX, size*0.5f - 0.5f, j - midY), randColor)) {
+					for (Poly poly : Cube.makeCube(size, new Vector(i - midX, size*0.5f - 0.5f, j - midY))) {
 						result.add(poly);
 					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	public List<Block> getBlocks() {
+		Random rand = new Random(1);
+		
+		List<Block> result = new ArrayList<Block>();
+		float midX = grid.length/2.0f;
+		float midY = grid[0].length/2.0f;
+		for (int i = -1; i <= grid.length; i++) {
+			for (int j = -1; j <= grid[0].length; j++) {
+				Cell cell = new Cell(i, j);
+				if (!cell.valid() || !cell.check()) {
+					float size = rand.nextFloat() + 0.5f;
+					result.add(Cube.makeCubeBlock(size, new Vector(i - midX, size*0.5f - 0.5f, j - midY)));
 				}
 			}
 		}

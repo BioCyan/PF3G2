@@ -15,7 +15,7 @@ public class Block {
 		this.maxs = maxs;
 	}
 	
-	public Poly[] getPolys(Color color) {
+	public Poly[] getPolys() {
 		Poly[] result = new Poly[6];
 		
 		//I could just write out all eight vertices
