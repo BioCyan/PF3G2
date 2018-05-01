@@ -53,7 +53,7 @@ public class Player {
 	}
 	
 	public void traceMove(Vector target, List<Block> blocks) {
-		float epsilon = 1.0f/16;
+		float epsilon = 0;//1.0f/16;
 		
 		Vector displacement = target.minus(position);
 		//Unless we find a collision we can move 100% of the way
@@ -62,6 +62,7 @@ public class Player {
 		for (Block block : blocks) {
 			float enter = 0;
 			float exit = 1;
+			boolean inside = true;
 			for (int i = 0; i < 6; i++) {
 				
 				int axis = i / 2 + 1;
@@ -80,6 +81,10 @@ public class Player {
 					positionIn = position.get(axis) > boundary + epsilon;
 				}
 				
+				if (!targetIn || !positionIn) {
+					inside = false;
+				}
+				
 				//Move advance the farthest that definitely won't intersect the block
 				if (!targetIn && !positionIn) {
 					enter = 1;
@@ -94,7 +99,6 @@ public class Player {
 					if (distance < exit) {
 						exit = distance;
 					}
-				} else if (targetIn && positionIn) {
 				}
 			}
 			
@@ -104,7 +108,8 @@ public class Player {
 			
 			if (enter < maxAdvance) {
 				maxAdvance = enter;
-			}	
+			}
+			System.out.println(inside);
 		}
 		
 		position = position.plus(displacement.times(maxAdvance - epsilon));
