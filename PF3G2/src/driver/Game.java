@@ -31,21 +31,17 @@ public class Game extends JPanel {
 	private float moveSpeed;
 	private boolean run = false;
 	private BSPTree tree;
-	Player player;
+	private Player player;
 	private Level1 level1;
 	
 	public Game(Dimension screenSize) {
 		setFocusable(true);
 		
-		moveSpeed = 4;
-		Maze maze = new Maze(8, 8);
 		level1 = new Level1();
 		loadLevel(level1);
 		
-		//polygons = maze.getPolys(Color.BLUE);
 		tree = new BSPTree(polygons);
 		
-		//tree = maze.genBSP();
 		player = new Player();
 		this.screenSize = screenSize;
 		hideCursor();
