@@ -24,7 +24,6 @@ public class Player {
 	public void setPosition(Vector position) {this.position=position;}
 	public void setCamera(Transform camera) {this.camera=camera;}
 	
-	
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle) {
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
 		Vector direction = rot.localToWorld(new Vector(moveX, 0, moveZ));

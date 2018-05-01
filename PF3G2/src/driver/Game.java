@@ -126,16 +126,18 @@ public class Game extends JPanel {
 	}
 	
 	protected void processMouseMotionEvent(MouseEvent event) {
-		yawAngle += (event.getXOnScreen() - (int)screenSize.getWidth()/2)*sensitivity;
-		pitchAngle -= (event.getYOnScreen() - (int)screenSize.getHeight()/2)*sensitivity;
+		if(start) {
+			yawAngle += (event.getXOnScreen() - (int)screenSize.getWidth()/2)*sensitivity;
+			pitchAngle -= (event.getYOnScreen() - (int)screenSize.getHeight()/2)*sensitivity;
 		
-		if (pitchAngle > 80*Mathf.PI/180) {
-			pitchAngle = 80*Mathf.PI/180;
-		} else if (pitchAngle < -80*Mathf.PI/180){
-			pitchAngle = -80*Mathf.PI/180;
+			if (pitchAngle > 80*Mathf.PI/180) {
+				pitchAngle = 80*Mathf.PI/180;
+			} else if (pitchAngle < -80*Mathf.PI/180){
+				pitchAngle = -80*Mathf.PI/180;
+			}
+		
+			centerMouse();
 		}
-		
-		centerMouse();
 	}
 	
 	protected void processKeyEvent(KeyEvent event) {
