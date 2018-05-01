@@ -3,16 +3,19 @@ package player;
 import math.Rotation;
 import math.Transform;
 import math.Vector;
+import model.Block;
 
 public class Player {
 	private final Vector STARTPOSITION = new Vector (0,1,0);
 	private final float PLAYERHEIGHT = 1;
 	private Vector position;
+	private Block hitbox;
 	private Transform camera;
 	private UserMovement movement;
 	public Player() {
 		 movement = new UserMovement();
 		 position = STARTPOSITION;
+		 hitbox = new Block(new Vector(-1, 0, -1), new Vector(1, 1, 1));
 		 camera= new Transform();
 	}
 	
@@ -23,6 +26,11 @@ public class Player {
 	public void setMovement(UserMovement movement) {this.movement=movement;}
 	public void setPosition(Vector position) {this.position=position;}
 	public void setCamera(Transform camera) {this.camera=camera;}
+	
+	private void hitboxPosition(Vector position) {
+		hitbox.setMins(position.plus(new Vector(-1, 0, -1)));
+		hitbox.setMaxs(position.plus(new Vector(1, 1, 1)));
+	}
 	
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle) {
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
@@ -38,6 +46,7 @@ public class Player {
 			position = position.minus(new Vector(0,position.y(),0));
 			movement.setMovement(new Vector(movement.getMovement().x(),0,movement.getMovement().z()));
 		}
+		hitboxPosition(position);
 		camera = new Transform(position, rot);
 	}
 

@@ -15,6 +15,12 @@ public class Block {
 		this.maxs = maxs;
 	}
 	
+	public Vector getMins() {return mins;}
+	public Vector getMaxs() {return maxs;}
+	
+	public void setMins(Vector newMin) {mins = newMin;}
+	public void setMaxs(Vector newMax) {maxs = newMax;}
+	
 	public Poly[] getPolys() {
 		Poly[] result = new Poly[6];
 		
