@@ -16,7 +16,7 @@ public class Level1 implements LevelInterface {
 
 	@Override
 	public List<Block> getBlocks() {
-		platforms.add(new Block(new Vector(8, -1, 8), new Vector(0, -1, 0)));
+		platforms.add(new Block(new Vector(-1, -3, -1), new Vector(8, -2, 8)));
 		return platforms;
 	}
 
