@@ -7,7 +7,7 @@ import math.Vector;
 import model.Block;
 
 public class Player {
-	private final Vector STARTPOSITION = new Vector (0,1,0);
+	private final Vector STARTPOSITION = new Vector (0,3,0);
 	private final float PLAYERHEIGHT = 1;
 	private Vector position;
 	private Block hitbox;
@@ -16,7 +16,7 @@ public class Player {
 	public Player() {
 		 movement = new UserMovement();
 		 position = STARTPOSITION;
-		 hitbox = new Block(new Vector(-0.25f, 0, -0.25f), new Vector(0.25f, 1, 0.25f));
+		 hitbox = new Block(new Vector(-0.25f, -1, -0.25f), new Vector(0.25f, 1, 0.25f));
 		 camera= new Transform();
 	}
 	
@@ -33,7 +33,7 @@ public class Player {
 		hitbox.setMaxs(position.plus(new Vector(1, 1, 1)));
 	}
 	
-	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle) {
+	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle, List<Block> blocks) {
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
 		Vector direction = rot.localToWorld(new Vector(moveX, 0, moveZ));
 		if(movement.getMovement().y()==0) {
@@ -41,7 +41,8 @@ public class Player {
 			movement.accelerate(deltaTime, direction);
 		}
 		movement.fall(deltaTime);
-		position = position.plus(movement.getMovement().times(deltaTime));
+		Vector target = position.plus(movement.getMovement().times(deltaTime));
+		traceMove(target, blocks);
 		//preventing the player to go below ground level and rest the y value to 0 (JT)
 		if(position.y()<0) {
 			position = position.minus(new Vector(0,position.y(),0));
@@ -52,41 +53,61 @@ public class Player {
 	}
 	
 	public void traceMove(Vector target, List<Block> blocks) {
-		Vector direction = target.minus(position).unit();
+		float epsilon = 1.0f/16;
+		
+		Vector displacement = target.minus(position);
 		//Unless we find a collision we can move 100% of the way
 		float maxAdvance = 1;
 		
 		for (Block block : blocks) {
-			float advance = 1;
+			float enter = 0;
+			float exit = 1;
 			for (int i = 0; i < 6; i++) {
+				
 				int axis = i / 2 + 1;
 				boolean side = i % 2 == 1;
 				//Check whether our path crosses into the collision plane for this axis
 				//(Doesn't necessarily mean we actually hit the block)
 				float boundary;
-				boolean intersecting;
+				boolean targetIn, positionIn;
 				if (side) {
 					boundary = block.getMaxs().get(axis) - hitbox.getMins().get(axis);
-					intersecting = target.get(axis) < boundary;
+					targetIn = target.get(axis) < boundary - epsilon;
+					positionIn = position.get(axis) < boundary - epsilon;
 				} else {
 					boundary = block.getMins().get(axis) - hitbox.getMaxs().get(axis);
-					intersecting = target.get(axis) > boundary;
+					targetIn = target.get(axis) > boundary + epsilon;
+					positionIn = position.get(axis) > boundary + epsilon;
 				}
 				
 				//Move advance the farthest that definitely won't intersect the block
-				if (intersecting && direction.get(axis) != 0) {
-					float distance = (boundary - position.get(axis))/direction.get(axis);
-					if (distance < advance) {
-						advance = distance;
+				if (!targetIn && !positionIn) {
+					enter = 1;
+					break;
+				} else if (targetIn && !positionIn && displacement.get(axis) != 0) {
+					float distance = (boundary - position.get(axis))/displacement.get(axis);
+					if (distance > enter) {
+						enter = distance;
 					}
+				} else if (!targetIn && positionIn) {
+					float distance = 1 - (target.get(axis) - boundary)/displacement.get(axis);
+					if (distance < exit) {
+						exit = distance;
+					}
+				} else if (targetIn && positionIn) {
 				}
 			}
-			if (advance > maxAdvance) {
-				maxAdvance = advance;
+			
+			if (enter < 0) {
+				enter = exit;
 			}
 			
-			position = position.plus(direction.times(maxAdvance));
+			if (enter < maxAdvance) {
+				maxAdvance = enter;
+			}	
 		}
+		
+		position = position.plus(displacement.times(maxAdvance - epsilon));
 	}
 
 	public void jump() {
