@@ -7,5 +7,6 @@ import math.Vector;
 
 public interface LevelInterface {
 	public List<Block> getBlocks();
-	public Vector setStartPosition(Vector position);
+	public Vector getStartPosition();
+	public Block getEndBlock();
 }

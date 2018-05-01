@@ -17,12 +17,18 @@ public class Level1 implements LevelInterface {
 	@Override
 	public List<Block> getBlocks() {
 		platforms.add(new Block(new Vector(-1, -3, -1), new Vector(8, -2, 8)));
+		platforms.add(new Block(new Vector(2, -2, 2), new Vector(4, -1, 4)));
 		return platforms;
 	}
 
 	@Override
-	public Vector setStartPosition(Vector position) {
-		
+	public Vector getStartPosition() {
+		return new Vector(4, 4, 0.1f);
+	}
+
+	@Override
+	public Block getEndBlock() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }
