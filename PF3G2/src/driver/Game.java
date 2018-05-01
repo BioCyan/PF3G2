@@ -11,6 +11,7 @@ import maze.Maze;
 import math.*;
 import model.*;
 import player.Player;
+import levels.Level1;
 
 public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -31,19 +32,15 @@ public class Game extends JPanel {
 	private boolean run = false;
 	private BSPTree tree;
 	Player player;
+	private Level1 level1;
 	
 	public Game(Dimension screenSize) {
 		setFocusable(true);
 		
 		moveSpeed = 4;
 		Maze maze = new Maze(8, 8);
-		blocks = maze.getBlocks();
-		polygons = new ArrayList<Poly>();
-		for (Block block : blocks) {
-			for (Poly poly : block.getPolys()) {
-				polygons.add(poly);
-			}
-		}
+		level1 = new Level1();
+		loadLevel(level1);
 		
 		//polygons = maze.getPolys(Color.BLUE);
 		tree = new BSPTree(polygons);
@@ -58,6 +55,16 @@ public class Game extends JPanel {
 		time = System.currentTimeMillis();
 		lastFPSCheck = time;
 		lastRepaint = time;
+	}
+	
+	private void loadLevel(Level1 level) {
+		blocks = level.getBlocks();
+		polygons = new ArrayList<Poly>();
+		for (Block block : blocks) {
+			for (Poly poly : block.getPolys()) {
+				polygons.add(poly);
+			}
+		}
 	}
 	
 	void hideCursor() {
