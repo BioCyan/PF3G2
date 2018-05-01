@@ -23,7 +23,7 @@ public class Level1 implements LevelInterface {
 
 	@Override
 	public Vector getStartPosition() {
-		return new Vector(4, 4, 0.1f);
+		return new Vector(1, 2, 1);
 	}
 
 	@Override
