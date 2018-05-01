@@ -42,7 +42,7 @@ public class Game extends JPanel {
 		
 		tree = new BSPTree(polygons);
 		
-		player = new Player();
+		player = new Player(level1.getStartPosition());
 		this.screenSize = screenSize;
 		hideCursor();
 		centerMouse();
