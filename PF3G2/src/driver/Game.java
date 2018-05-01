@@ -17,6 +17,7 @@ public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private List<Poly> polygons;
+	private List<Block> blocks;
 	private Dimension screenSize;
 	private long time;
 	private long lastFPSCheck;
@@ -35,19 +36,17 @@ public class Game extends JPanel {
 	public Game(Dimension screenSize) {
 		setFocusable(true);
 		
-		Poly[] tempPolys = (new Block(new Vector(0, 0, 0), new Vector(4, 4, 4))).getPolys(Color.BLUE); 
-		polygons = new ArrayList<Poly>();
-		for (int i = 0; i < tempPolys.length; i++) {
-			polygons.add(tempPolys[i]);
-		}
-		tempPolys = (new Block(new Vector(2, 2, -6), new Vector(6, 6, -2))).getPolys(Color.GREEN); 
-		for (int i = 0; i < tempPolys.length; i++) {
-			polygons.add(tempPolys[i]);
-		}
-		
 		moveSpeed = 4;
 		Maze maze = new Maze(8, 8);
-		polygons = maze.getPolys(Color.BLUE);
+		blocks = maze.getBlocks();
+		polygons = new ArrayList<Poly>();
+		for (Block block : blocks) {
+			for (Poly poly : block.getPolys()) {
+				polygons.add(poly);
+			}
+		}
+		
+		//polygons = maze.getPolys(Color.BLUE);
 		tree = new BSPTree(polygons);
 		
 		//tree = maze.genBSP();
