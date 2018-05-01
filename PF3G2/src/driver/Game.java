@@ -11,7 +11,6 @@ import maze.Maze;
 import math.*;
 import model.*;
 import player.Player;
-import player.UserMovement;
 
 public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -29,7 +28,7 @@ public class Game extends JPanel {
 	private float moveX;
 	private float moveZ;
 	private float moveSpeed;
-	private boolean start = false;
+	private boolean run = false;
 	private BSPTree tree;
 	Player player;
 	
@@ -75,16 +74,8 @@ public class Game extends JPanel {
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		//if game has not started yet print out title and instruction to begin
-		if(!start) {
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
-			graphics.setColor(Color.cyan);
-			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-			
-			graphics.setColor(Color.white);
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
-			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
-		}
-		if(start) {
+		startScreen(graphics);
+		if(run) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle);
 		
 		tree.render(graphics, player.getCamera(), screenSize, 90);
@@ -125,7 +116,7 @@ public class Game extends JPanel {
 	}
 	
 	protected void processMouseMotionEvent(MouseEvent event) {
-		if(start) {
+		if(run) {
 			yawAngle += (event.getXOnScreen() - (int)screenSize.getWidth()/2)*sensitivity;
 			pitchAngle -= (event.getYOnScreen() - (int)screenSize.getHeight()/2)*sensitivity;
 		
@@ -137,6 +128,39 @@ public class Game extends JPanel {
 		
 			centerMouse();
 		}
+	}
+	
+	private void startScreen(Graphics graphics) {
+		if(!run) {
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
+			graphics.setColor(Color.cyan);
+			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
+			
+			graphics.setColor(Color.white);
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
+			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
+		}
+	}
+	
+	private void pauseScreen() {
+		Graphics graphics;
+		Image img = createImage((int)screenSize.getWidth(),(int)screenSize.getHeight());
+		graphics = img.getGraphics();
+		graphics.setColor(Color.BLACK);
+		graphics.fillRect(0, 0, (int)screenSize.getWidth(),  (int)screenSize.getHeight());
+		if(run) {
+			run = false;
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
+			graphics.setColor(Color.cyan);
+			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
+		
+			graphics.setColor(Color.white);
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
+			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
+		}
+		else {
+			run = true;
+			}
 	}
 	
 	protected void processKeyEvent(KeyEvent event) {
@@ -162,8 +186,11 @@ public class Game extends JPanel {
 			case KeyEvent.VK_ESCAPE:
 				System.exit(0);
 				break;
+			case KeyEvent.VK_P:
+				pauseScreen();
+				break;
 			case KeyEvent.VK_ENTER:
-				start = true;
+				run = true;
 			default:
 				break;
 			}
