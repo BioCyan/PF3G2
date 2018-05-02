@@ -14,9 +14,9 @@ public class Player {
 	private boolean onGround;
 	private Transform camera;
 	private UserMovement movement;
-	public Player(Vector startPosition) {
+	public Player() {
 		 movement = new UserMovement();
-		 position = startPosition;
+		 position = new Vector();
 		 hitbox = new Block(new Vector(-0.25f, -1, -0.25f), new Vector(0.25f, 1, 0.25f));
 		 camera = new Transform();
 		 onGround = false;
@@ -44,10 +44,10 @@ public class Player {
 		movement.accelerate(deltaTime, direction);
 		movement.fall(deltaTime);
 		
-		float oldYSpeed = movement.getMovement().y();
-		Vector target = position.plus(movement.getMovement().times(deltaTime));
+		float oldYSpeed = movement.getVelocity().y();
+		Vector target = position.plus(movement.getVelocity().times(deltaTime));
 		traceMove(target, blocks);
-		float newYSpeed = movement.getMovement().y();
+		float newYSpeed = movement.getVelocity().y();
 		onGround = (oldYSpeed < 0 && newYSpeed != oldYSpeed);
 		
 		
@@ -132,8 +132,8 @@ public class Player {
 			
 			Vector nextDisplacement = displacement;
 			if (collideAxis != 0) {
-				Vector m = movement.getMovement();
-				movement.setMovement(m.minus(new Vector(collideAxis, m.get(collideAxis))));
+				Vector m = movement.getVelocity();
+				movement.setVelocity(m.minus(new Vector(collideAxis, m.get(collideAxis))));
 				nextDisplacement = displacement.minus(new Vector(collideAxis, displacement.get(collideAxis)));
 			}
 			

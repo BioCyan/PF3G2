@@ -11,7 +11,7 @@ import maze.Maze;
 import math.*;
 import model.*;
 import player.Player;
-import levels.Level1;
+import levels.*;
 
 public class Game extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -28,21 +28,23 @@ public class Game extends JPanel {
 	private int frameCount = 0;
 	private float moveX;
 	private float moveZ;
-	private float moveSpeed;
+	private float resetValue;
 	private boolean run = false;
 	private BSPTree tree;
 	private Player player;
-	private Level1 level1;
+	private LevelInterface level;
 	
 	public Game(Dimension screenSize) {
 		setFocusable(true);
 		
-		level1 = new Level1();
-		loadLevel(level1);
+		level = new Level1();
+		
+		player = new Player();
+		
+		loadLevel(level);
 		
 		tree = new BSPTree(polygons);
 		
-		player = new Player(level1.getStartPosition());
 		this.screenSize = screenSize;
 		hideCursor();
 		centerMouse();
@@ -53,7 +55,7 @@ public class Game extends JPanel {
 		lastRepaint = time;
 	}
 	
-	private void loadLevel(Level1 level) {
+	private void loadLevel(LevelInterface level) {
 		blocks = level.getBlocks();
 		polygons = new ArrayList<Poly>();
 		for (Block block : blocks) {
@@ -61,6 +63,10 @@ public class Game extends JPanel {
 				polygons.add(poly);
 			}
 		}
+		resetValue = level.resetYValue();
+		tree = new BSPTree(polygons);
+		player.setPosition(level.getStartPosition());
+		player.getMovement().setVelocity(new Vector());
 	}
 	
 	void hideCursor() {
@@ -80,6 +86,23 @@ public class Game extends JPanel {
 		startScreen(graphics);
 		if(run) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
+		
+		if(player.getPosition().y() < resetValue) {
+			player.setPosition(level.getStartPosition());
+			player.getMovement().setVelocity(new Vector());
+		}
+		
+		if(level.getEndBlock() != null && player.getPosition().x() > level.getEndBlock().getMins().x() && 
+				player.getPosition().x() < level.getEndBlock().getMaxs().x() &&
+				player.getPosition().z() > level.getEndBlock().getMins().z() &&
+				player.getPosition().z() < level.getEndBlock().getMaxs().z() &&
+				player.getPosition().y() > level.getEndBlock().getMaxs().y()) 
+		{
+			level = level.nextLevel();
+			if(level != null)
+				loadLevel(level);
+		}
+			
 		
 		tree.render(graphics, player.getCamera(), screenSize, 90);
 		}
