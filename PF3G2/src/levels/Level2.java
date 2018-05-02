@@ -18,7 +18,7 @@ public class Level2 implements LevelInterface {
 	public List<Block> getBlocks() {
 		platforms.add(new Block(new Vector(-1, -2, -1), new Vector(8, -1, 8)));
 		platforms.add(new Block(new Vector(2, -1, 2), new Vector(4, -0.5f, 4)));
-		//platforms.add(getEndBlock());
+		platforms.add(getEndBlock());
 		return platforms;
 	}
 
@@ -28,7 +28,7 @@ public class Level2 implements LevelInterface {
 
 	public Block getEndBlock() {
 		
-		return null;
+		return new Block(new Vector(6, -1, 6), new Vector(8, -.5f, 8));
 	}
 
 	public float resetYValue() {
@@ -42,8 +42,7 @@ public class Level2 implements LevelInterface {
 	}
 
 	public LevelInterface nextLevel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Level3();
 	}
 
 }
