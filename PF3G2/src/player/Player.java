@@ -11,13 +11,15 @@ public class Player {
 	private final float PLAYERHEIGHT = 1;
 	private Vector position;
 	private Block hitbox;
+	private boolean onGround;
 	private Transform camera;
 	private UserMovement movement;
 	public Player(Vector startPosition) {
 		 movement = new UserMovement();
 		 position = startPosition;
 		 hitbox = new Block(new Vector(-0.25f, -1, -0.25f), new Vector(0.25f, 1, 0.25f));
-		 camera= new Transform();
+		 camera = new Transform();
+		 onGround = false;
 	}
 	
 	public UserMovement getMovement() {return movement;}
@@ -29,21 +31,33 @@ public class Player {
 	public void setCamera(Transform camera) {this.camera=camera;}
 	
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle, List<Block> blocks) {
+		//Time is measured in milliseconds so this does happen
+		if (deltaTime == 0) {
+			return;
+		}
+		
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
 		Vector direction = rot.localToWorld(new Vector(moveX, 0, moveZ));
-		if(position.y()==0) {
+		if (onGround) {
 			movement.friction(deltaTime);
 		}
 		movement.accelerate(deltaTime, direction);
-		
 		movement.fall(deltaTime);
+		
+		float oldYSpeed = movement.getMovement().y();
 		Vector target = position.plus(movement.getMovement().times(deltaTime));
 		traceMove(target, blocks);
+		float newYSpeed = movement.getMovement().y();
+		onGround = (oldYSpeed < 0 && newYSpeed != oldYSpeed);
+		
+		
 		//preventing the player to go below ground level and rest the y value to 0 (JT)
+		/*
 		if(position.y()<0) {
 			position = position.minus(new Vector(0,position.y(),0));
 			movement.setMovement(new Vector(movement.getMovement().x(),0,movement.getMovement().z()));
 		}
+		*/
 		camera = new Transform(position, rot);
 	}
 	
@@ -108,6 +122,12 @@ public class Player {
 					maxAdvance = enter;
 					collideAxis = blockCollideAxis;
 				}
+				
+				if (inside) {
+					System.out.println("emergency unstuck");
+					float newY = block.getMaxs().y() - hitbox.getMins().y();
+					position = new Vector(position.x(), newY, position.z());
+				}
 			}
 			
 			Vector nextDisplacement = displacement;
@@ -116,6 +136,14 @@ public class Player {
 				movement.setMovement(m.minus(new Vector(collideAxis, m.get(collideAxis))));
 				nextDisplacement = displacement.minus(new Vector(collideAxis, displacement.get(collideAxis)));
 			}
+			
+			//Failsafe to avoid ending up inside the block
+			if (maxAdvance < 1) {
+				maxAdvance -= 1.0f/1024;
+			}
+			if (maxAdvance < 0) {
+				maxAdvance = 0;
+			}
 			position = position.plus(displacement.times(maxAdvance));
 			displacement = nextDisplacement.times(1 - maxAdvance);
 			target = position.plus(displacement);
@@ -123,7 +151,7 @@ public class Player {
 	}
 
 	public void jump() {
-		if(position.y()==0) {
+		if(onGround) {
 			movement.jump();
 		}
 	}

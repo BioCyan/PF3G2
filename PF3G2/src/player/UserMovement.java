@@ -4,7 +4,7 @@ import math.Vector;
 
 public class UserMovement {
 	private Vector movement;
-	private final float ACCELERATIONOFGRAVITY=5,FRICTION=5,ACCELERATION=7, MAXSPEED=10, JUMPSPEED = 3;
+	private final float ACCELERATIONOFGRAVITY=5,FRICTION=5,ACCELERATION=7, MAXSPEED=10, JUMPSPEED = 5;
 	public UserMovement() {
 		movement = new Vector(0,0,0);
 	}
@@ -16,7 +16,7 @@ public class UserMovement {
 	public void jump() {movement = movement.plus(new Vector (0,JUMPSPEED,0));}
 	public void fall(float deltaTime) {
 		movement = movement.minus(new Vector (0,ACCELERATIONOFGRAVITY*deltaTime,0));
-		}
+	}
 	
 	//This method increases the speed of the player
 	public void accelerate(float deltaTime, Vector direction) {
