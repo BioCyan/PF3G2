@@ -13,6 +13,23 @@ public class Vector {
 		this.z = z;
 	}
 	
+	public Vector(int axis, float value) {
+		x = y = z = 0;
+		switch(axis) {
+		case 1:
+			x = value;
+			break;
+		case 2:
+			y = value;
+			break;
+		case 3:
+			z = value;
+			break;
+		default:
+			throw new RuntimeException("Tried to access nonexistant axis " + axis);
+		}
+	}
+	
 	public float x() {return x;}
 	public float y() {return y;}
 	public float z() {return z;}

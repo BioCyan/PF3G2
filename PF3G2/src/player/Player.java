@@ -28,18 +28,14 @@ public class Player {
 	public void setPosition(Vector position) {this.position=position;}
 	public void setCamera(Transform camera) {this.camera=camera;}
 	
-	private void hitboxPosition(Vector position) {
-		hitbox.setMins(position.plus(new Vector(-1, 0, -1)));
-		hitbox.setMaxs(position.plus(new Vector(1, 1, 1)));
-	}
-	
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle, List<Block> blocks) {
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
 		Vector direction = rot.localToWorld(new Vector(moveX, 0, moveZ));
-		if(movement.getMovement().y()==0) {
+		if(position.y()==0) {
 			movement.friction(deltaTime);
-			movement.accelerate(deltaTime, direction);
 		}
+		movement.accelerate(deltaTime, direction);
+		
 		movement.fall(deltaTime);
 		Vector target = position.plus(movement.getMovement().times(deltaTime));
 		traceMove(target, blocks);
@@ -48,75 +44,87 @@ public class Player {
 			position = position.minus(new Vector(0,position.y(),0));
 			movement.setMovement(new Vector(movement.getMovement().x(),0,movement.getMovement().z()));
 		}
-		//hitboxPosition(position);
 		camera = new Transform(position, rot);
 	}
 	
 	public void traceMove(Vector target, List<Block> blocks) {
-		float epsilon = 0;//1.0f/16;
-		
 		Vector displacement = target.minus(position);
-		//Unless we find a collision we can move 100% of the way
-		float maxAdvance = 1;
 		
-		for (Block block : blocks) {
-			float enter = 0;
-			float exit = 1;
-			boolean inside = true;
-			for (int i = 0; i < 6; i++) {
-				
-				int axis = i / 2 + 1;
-				boolean side = i % 2 == 1;
-				//Check whether our path crosses into the collision plane for this axis
-				//(Doesn't necessarily mean we actually hit the block)
-				float boundary;
-				boolean targetIn, positionIn;
-				if (side) {
-					boundary = block.getMaxs().get(axis) - hitbox.getMins().get(axis);
-					targetIn = target.get(axis) < boundary - epsilon;
-					positionIn = position.get(axis) < boundary - epsilon;
-				} else {
-					boundary = block.getMins().get(axis) - hitbox.getMaxs().get(axis);
-					targetIn = target.get(axis) > boundary + epsilon;
-					positionIn = position.get(axis) > boundary + epsilon;
+		int MAX_BUMPS = 4;
+		for (int bump = 0; bump < MAX_BUMPS; bump++) {
+			if (displacement.length() == 0) {
+				return;
+			}
+			
+			//Unless we find a collision we can move 100% of the way
+			float maxAdvance = 1;
+			
+			int collideAxis = 0;
+			int blockCollideAxis = 0;
+			for (Block block : blocks) {
+				float enter = 0;
+				float exit = 1;
+				boolean inside = true;
+				for (int i = 0; i < 6; i++) {
+					int axis = i / 2 + 1;
+					boolean side = i % 2 == 1;
+					//Check whether our path crosses into the collision plane for this axis
+					//(Doesn't necessarily mean we actually hit the block)
+					float boundary;
+					boolean targetIn, positionIn;
+					if (side) {
+						boundary = block.getMaxs().get(axis) - hitbox.getMins().get(axis);
+						targetIn = target.get(axis) < boundary;
+						positionIn = position.get(axis) < boundary;
+					} else {
+						boundary = block.getMins().get(axis) - hitbox.getMaxs().get(axis);
+						targetIn = target.get(axis) > boundary;
+						positionIn = position.get(axis) > boundary;
+					}
+					
+					if (!positionIn) {
+						inside = false;
+					}
+					
+					//Move advance the farthest that definitely won't intersect the block
+					if (!targetIn && !positionIn) {
+						enter = 1;
+						break;
+					} else if (targetIn && !positionIn && displacement.get(axis) != 0) {
+						float distance = (boundary - position.get(axis))/displacement.get(axis);
+						if (distance >= enter) {
+							blockCollideAxis = axis;
+							enter = distance;
+						}
+					} else if (!targetIn && positionIn) {
+						float distance = 1 - (target.get(axis) - boundary)/displacement.get(axis);
+						if (distance < exit) {
+							exit = distance;
+						}
+					}
 				}
 				
-				if (!targetIn || !positionIn) {
-					inside = false;
-				}
-				
-				//Move advance the farthest that definitely won't intersect the block
-				if (!targetIn && !positionIn) {
-					enter = 1;
-					break;
-				} else if (targetIn && !positionIn && displacement.get(axis) != 0) {
-					float distance = (boundary - position.get(axis))/displacement.get(axis);
-					if (distance > enter) {
-						enter = distance;
-					}
-				} else if (!targetIn && positionIn) {
-					float distance = 1 - (target.get(axis) - boundary)/displacement.get(axis);
-					if (distance < exit) {
-						exit = distance;
-					}
+				if (enter < maxAdvance) {
+					maxAdvance = enter;
+					collideAxis = blockCollideAxis;
 				}
 			}
 			
-			if (enter < 0) {
-				enter = exit;
+			Vector nextDisplacement = displacement;
+			if (collideAxis != 0) {
+				Vector m = movement.getMovement();
+				movement.setMovement(m.minus(new Vector(collideAxis, m.get(collideAxis))));
+				nextDisplacement = displacement.minus(new Vector(collideAxis, displacement.get(collideAxis)));
 			}
-			
-			if (enter < maxAdvance) {
-				maxAdvance = enter;
-			}
-			System.out.println(inside);
+			position = position.plus(displacement.times(maxAdvance));
+			displacement = nextDisplacement.times(1 - maxAdvance);
+			target = position.plus(displacement);
 		}
-		
-		position = position.plus(displacement.times(maxAdvance - epsilon));
 	}
 
 	public void jump() {
-		if(movement.getMovement().y()==0)
+		if(position.y()==0) {
 			movement.jump();
 		}
+	}
 }
