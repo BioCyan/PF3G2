@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-import maze.Maze;
 import math.*;
 import model.*;
 import player.Player;
@@ -92,14 +91,16 @@ public class Game extends JPanel {
 			player.getMovement().setVelocity(new Vector());
 		}
 		
-		if(level.getBlocks().contains(level.getEndBlock()) && level.getEndBlock() != null && player.getPosition().x() > level.getEndBlock().getMins().x() && 
+		if(level.getEndBlock() != null &&
+				player.getPosition().x() > level.getEndBlock().getMins().x() && 
 				player.getPosition().x() < level.getEndBlock().getMaxs().x() &&
 				player.getPosition().z() > level.getEndBlock().getMins().z() &&
 				player.getPosition().z() < level.getEndBlock().getMaxs().z() &&
 				player.getPosition().y() > level.getEndBlock().getMaxs().y()) 
 		{
-			level = level.nextLevel();
-			if(level != null) {
+			LevelInterface nextLevel = level.nextLevel();
+			if(nextLevel != null) {
+				level = nextLevel;
 				loadLevel(level);
 			}
 			else {

@@ -1,11 +1,10 @@
-package maze;
+package model;
 
 import java.util.Random;
 import java.util.List;
 import java.util.Stack;
 import java.util.ArrayList;
 import math.*;
-import model.Block;
 
 public class Maze {
 	private class Cell {
@@ -79,11 +78,20 @@ public class Maze {
 		public void set(boolean value) {
 			grid[row][column] = value;
 		}
+		
+		public Vector getPosition() {
+			return new Vector(row, 0.5f, column);
+		}
 	}
 	
 	private boolean[][] grid;
+	private float scale;
+	private Cell start;
+	private Cell end;
 	
-	public Maze(int rows, int columns) {
+	public Maze(int rows, int columns, float scale) {
+		this.scale = scale;
+		
 		Random rand = new Random(1);
 		grid = new boolean[rows][columns];
 		for (int i = 0; i < rows; i++) {
@@ -93,7 +101,8 @@ public class Maze {
 		}
 		
 		Stack<Cell> cellStack = new Stack<Cell>();
-		cellStack.push(new Cell());
+		start = new Cell();
+		cellStack.push(start);
 		
 		while (!cellStack.isEmpty()) {
 			Cell cell = cellStack.pop();
@@ -104,22 +113,29 @@ public class Maze {
 				int direction = (i + tryFirst) % 4;
 				if (cell.validPath(direction) && !cell.reconnects(direction)) {
 					cellStack.push(cell);
-					cellStack.push(cell.move(direction));
+					end = cell.move(direction);
+					cellStack.push(end);
 					break;
 				}
 			}
 		}
 	}
 	
-	public List<Block> getBlocks(float size) {
+	public Vector getStart() {
+		return start.getPosition().times(scale);
+	}
+	
+	public Vector getEnd() {
+		return end.getPosition().times(scale);
+	}
+	
+	public List<Block> getBlocks() {
 		List<Block> result = new ArrayList<Block>();
-		float midX = grid.length/2.0f;
-		float midY = grid[0].length/2.0f;
 		for (int i = -1; i <= grid.length; i++) {
 			for (int j = -1; j <= grid[0].length; j++) {
 				Cell cell = new Cell(i, j);
 				if (!cell.valid() || !cell.check()) {
-					result.add(new Block(size, (new Vector(i - midX, 0.5f, j - midY)).times(size)));
+					result.add(new Block(scale, (new Vector(i, 0.5f, j)).times(scale)));
 				}
 			}
 		}

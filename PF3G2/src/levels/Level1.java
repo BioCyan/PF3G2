@@ -25,7 +25,7 @@ public class Level1 implements LevelInterface {
 		//platforms
 		platforms.add(new Block(new Vector(2, -1, 2), new Vector(4, -0.5f, 4)));
 		platforms.add(new Block(new Vector(4, -0.5f, 4), new Vector(6, 0, 6)));
-		//platforms.add(getEndBlock());
+		platforms.add(getEndBlock());
 		return platforms;
 	}
 
