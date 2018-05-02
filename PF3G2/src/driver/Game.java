@@ -29,6 +29,7 @@ public class Game extends JPanel {
 	private float moveZ;
 	private float resetValue;
 	private boolean run = false;
+	private boolean gameOver = false;
 	private BSPTree tree;
 	private Player player;
 	private LevelInterface level;
@@ -83,6 +84,11 @@ public class Game extends JPanel {
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		//if game has not started yet print out title and instruction to begin
 		startScreen(graphics);
+		//if game not running and game is over, call endScreen method
+		if(!run&&gameOver) {
+			endScreen(graphics);
+		}
+		
 		if(run) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
 		
@@ -104,7 +110,9 @@ public class Game extends JPanel {
 				loadLevel(level);
 			}
 			else {
-				//load end screen
+				run = false;
+				gameOver = true;
+				
 			}
 		}
 			
@@ -162,7 +170,7 @@ public class Game extends JPanel {
 	}
 	
 	private void startScreen(Graphics graphics) {
-		if(!run) {
+		if(!run&&!gameOver) {
 			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 			graphics.setColor(Color.cyan);
 			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
@@ -194,6 +202,14 @@ public class Game extends JPanel {
 			}
 	}
 	
+	private void endScreen(Graphics graphics) {
+		if(!run&&gameOver) {
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
+			graphics.setColor(Color.cyan);
+			graphics.drawString("GAME OVER", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
+			//graphics.drawString("PRESS 'R' TO RESTART", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+30));
+		}
+	}
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
 			switch (event.getKeyCode()) {
