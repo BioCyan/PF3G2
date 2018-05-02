@@ -99,8 +99,12 @@ public class Game extends JPanel {
 				player.getPosition().y() > level.getEndBlock().getMaxs().y()) 
 		{
 			level = level.nextLevel();
-			if(level != null)
+			if(level != null) {
 				loadLevel(level);
+			}
+			else {
+				//load end screen
+			}
 		}
 			
 		
