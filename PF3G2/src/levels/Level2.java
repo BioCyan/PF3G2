@@ -15,26 +15,22 @@ public class Level2 implements LevelInterface {
 		//level3 = new Level3();
 	}
 	
-	@Override
 	public List<Block> getBlocks() {
 		platforms.add(new Block(new Vector(-1, -2, -1), new Vector(8, -1, 8)));
 		platforms.add(new Block(new Vector(2, -1, 2), new Vector(4, -0.5f, 4)));
-		//platforms.add(getEndBlock());
+		platforms.add(getEndBlock());
 		return platforms;
 	}
 
-	@Override
 	public Vector getStartPosition() {
 		return new Vector(1, 2, 1);
 	}
 
-	@Override
 	public Block getEndBlock() {
 		
-		return null;
+		return new Block(new Vector(6, -1, 6), new Vector(8, -.5f, 8));
 	}
 
-	@Override
 	public float resetYValue() {
 		float resetValue = 0;
 		for(Block something: platforms) {
@@ -45,10 +41,8 @@ public class Level2 implements LevelInterface {
 		return resetValue;
 	}
 
-	@Override
 	public LevelInterface nextLevel() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Level3();
 	}
 
 }
