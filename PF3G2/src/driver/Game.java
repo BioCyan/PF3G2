@@ -92,7 +92,7 @@ public class Game extends JPanel {
 			player.getMovement().setVelocity(new Vector());
 		}
 		
-		if(level.getEndBlock() != null && player.getPosition().x() > level.getEndBlock().getMins().x() && 
+		if(level.getBlocks().contains(level.getEndBlock()) && level.getEndBlock() != null && player.getPosition().x() > level.getEndBlock().getMins().x() && 
 				player.getPosition().x() < level.getEndBlock().getMaxs().x() &&
 				player.getPosition().z() > level.getEndBlock().getMins().z() &&
 				player.getPosition().z() < level.getEndBlock().getMaxs().z() &&
