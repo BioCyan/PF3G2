@@ -7,8 +7,6 @@ import math.Vector;
 import model.Block;
 
 public class Player {
-	private final Vector STARTPOSITION = new Vector (0,3,0);
-	private final float PLAYERHEIGHT = 1;
 	private Vector position;
 	private Block hitbox;
 	private boolean onGround;
@@ -42,7 +40,7 @@ public class Player {
 			movement.friction(deltaTime);
 		}
 		else {
-			movement.airFriction(deltaTime, movement.getAirFriction());
+			movement.airFriction(deltaTime);
 		}
 		movement.accelerate(deltaTime, direction);
 		movement.fall(deltaTime);
@@ -53,14 +51,6 @@ public class Player {
 		float newYSpeed = movement.getVelocity().y();
 		onGround = (oldYSpeed < 0 && newYSpeed != oldYSpeed);
 		
-		
-		//preventing the player to go below ground level and rest the y value to 0 (JT)
-		/*
-		if(position.y()<0) {
-			position = position.minus(new Vector(0,position.y(),0));
-			movement.setMovement(new Vector(movement.getMovement().x(),0,movement.getMovement().z()));
-		}
-		*/
 		camera = new Transform(position, rot);
 	}
 	
@@ -140,7 +130,7 @@ public class Player {
 				nextDisplacement = displacement.minus(new Vector(collideAxis, displacement.get(collideAxis)));
 			}
 			
-			//Failsafe to avoid ending up inside the block
+			//Safety margin to avoid ending up inside the block
 			if (maxAdvance < 1) {
 				maxAdvance -= 1.0f/1024;
 			}

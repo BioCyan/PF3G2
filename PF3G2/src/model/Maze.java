@@ -124,7 +124,6 @@ public class Maze {
 				}
 			}
 			
-			System.out.println(reversing);
 			if (!succeeded && !reversing) {
 				reversing = true;
 				endList.add(cell);

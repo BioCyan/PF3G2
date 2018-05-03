@@ -37,7 +37,6 @@ public class Poly {
 		}
 		graphics.setColor(color);
 		graphics.fillPolygon(polygon);
-		graphics.setColor(color);
 		graphics.drawPolygon(polygon);
 	}
 	

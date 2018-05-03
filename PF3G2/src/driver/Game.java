@@ -144,8 +144,8 @@ public class Game extends JPanel implements GameInterface{
 			displayTimer(graphics);
 			displayfps(graphics, fps);
 		}
+		
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
-
 		frameCount++;			
 		if(frameCount >= 15)
 		{
@@ -192,7 +192,7 @@ public class Game extends JPanel implements GameInterface{
 			centerMouse();
 		}
 	}
-	//needs revision
+	
 	private void restartGame() {
 		gameOver = false;
 		run = false;
@@ -261,8 +261,6 @@ public class Game extends JPanel implements GameInterface{
 				else {
 					instructions = false;
 				}
-				
-				
 				break;
 			case KeyEvent.VK_R:
 				if(gameOver) {
@@ -270,8 +268,11 @@ public class Game extends JPanel implements GameInterface{
 				}
 				break;
 			case KeyEvent.VK_ENTER:
-				startTime = System.currentTimeMillis();;
-				run = true;
+				if (!run && !gameOver) {
+					startTime = System.currentTimeMillis();;
+					run = true;
+				}
+				break;
 			default:
 				break;
 			}

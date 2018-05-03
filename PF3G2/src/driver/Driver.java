@@ -5,7 +5,6 @@ import javax.swing.*;
 public class Driver implements GameInterface{
 
 	public static void main(String[] args) {
-		
 		JFrame frame = new JFrame("3D Test");
 		
 		frame.setSize(screenSize);

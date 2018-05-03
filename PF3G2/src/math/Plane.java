@@ -1,7 +1,6 @@
 package math;
 
 public class Plane {
-	//private int axis; //x = 1, y = 2, z = 2
 	private Vector normal;
 	private float position;
 	
@@ -11,7 +10,6 @@ public class Plane {
 	}
 	
 	public Plane(int axis, float position) {
-		//this.axis = axis;
 		this.position = position;
 		switch (axis) {
 		case 1:
@@ -28,6 +26,5 @@ public class Plane {
 	
 	public float distance(Vector v) {
 		return normal.dot(v) - position;
-		//return v.get(axis) - position;
 	}
 }
