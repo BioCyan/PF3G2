@@ -33,11 +33,13 @@ public class Menu implements driver.GameInterface{
 		graphics.drawString("Objective: Find the monkey", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+60));
 	}
 	
-	public static void endScreen(Graphics graphics) {
+	public static void endScreen(Graphics graphics, String finalTime) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 50));
 		graphics.setColor(Color.red);
 		graphics.drawString("GAME OVER", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
 		graphics.drawString("PRESS 'R' TO RESTART", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+40));
+		graphics.setColor(Color.white);
+		graphics.drawString(finalTime, (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+80)); 
 	}
 }
 

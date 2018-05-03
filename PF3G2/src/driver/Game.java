@@ -18,7 +18,7 @@ public class Game extends JPanel implements GameInterface{
 	private List<Poly> polygons;
 	private List<Block> blocks;
 	private Dimension screenSize;
-	private long time;
+	private long time, playerTime, startTime;
 	private long lastFPSCheck;
 	private long lastRepaint;
 	private float yawAngle = 0;
@@ -31,6 +31,7 @@ public class Game extends JPanel implements GameInterface{
 	private BSPTree tree;
 	private Player player;
 	private LevelInterface level;
+	String playerCurrentTime;
 	
 	public Game(Dimension screenSize) {
 		setFocusable(true);
@@ -47,7 +48,6 @@ public class Game extends JPanel implements GameInterface{
 		hideCursor();
 		centerMouse();
 		enableEvents(MouseEvent.MOUSE_MOVED);
-		
 		time = System.currentTimeMillis();
 		lastFPSCheck = time;
 		lastRepaint = time;
@@ -88,6 +88,7 @@ public class Game extends JPanel implements GameInterface{
 	public void paintComponent(Graphics graphics) {
 		long currentTime = System.currentTimeMillis();
 		float deltaTime = 0.001f*(currentTime - lastRepaint);
+
 		
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
@@ -96,7 +97,7 @@ public class Game extends JPanel implements GameInterface{
 			driver.Menu.startScreen(graphics);
 		//if game not running and game is over, call endScreen method
 		if(!run&&gameOver&&!restart) {
-			driver.Menu.endScreen(graphics);
+			driver.Menu.endScreen(graphics,playerCurrentTime);
 		}
 		if(paused&&!run&&!gameOver) {
 			driver.Menu.pauseScreen(graphics);
@@ -131,9 +132,9 @@ public class Game extends JPanel implements GameInterface{
 					}
 				}
 			}
-				
 			
 			tree.render(graphics, player.getCamera(), screenSize, 90);
+			displayTimer(graphics);
 		}
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 
@@ -192,6 +193,20 @@ public class Game extends JPanel implements GameInterface{
 		level = new Level1();
 		loadLevel(level);
 	}
+	
+	private void displayTimer(Graphics graphics) {
+		playerTime = System.currentTimeMillis();
+		float timer = playerTime-startTime;
+		timer = ((int) timer*1000)/1000.0f;
+		int milSec = (int) (timer%1000);
+		int sec = (int) ((timer/1000)%60000);
+		int min = (int) (sec/60);
+		playerCurrentTime = min+":"+sec+":"+milSec;
+		graphics.setColor(Color.white);
+		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
+		graphics.drawString(playerCurrentTime, 10, 15);
+	}
+	
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
 			switch (event.getKeyCode()) {
@@ -231,6 +246,7 @@ public class Game extends JPanel implements GameInterface{
 				}
 				break;
 			case KeyEvent.VK_ENTER:
+				startTime = System.currentTimeMillis();;
 				run = true;
 			default:
 				break;
