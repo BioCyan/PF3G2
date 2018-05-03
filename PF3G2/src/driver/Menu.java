@@ -9,7 +9,7 @@ public class Menu implements driver.GameInterface{
 		graphics.drawString("The J.U.M.P. Unusual Multi-dimensional Platformer", 60, (int)(screenSize.getHeight()/2)); 
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
 		graphics.setColor(Color.white);
-		graphics.drawString("Press Enter to Begin!", 60, (int)(screenSize.getHeight()/2+20));	
+		graphics.drawString("Press Enter to Begin!", 60, (int)(screenSize.getHeight()/2+30));	
 		graphics.drawString("PRESS 'I' FOR INSTRUCTION MENU", 60, (int)(screenSize.getHeight()/2+60));
 	}
 	
@@ -27,8 +27,8 @@ public class Menu implements driver.GameInterface{
 		graphics.setColor(Color.white);
 		graphics.drawString("---GAME INSTRUCTIONS---", 60, (int)(screenSize.getHeight()/2));
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 20));
-		graphics.drawString("Press Enter to Begin!", 60, (int)(screenSize.getHeight()/2+20));	
-		graphics.drawString("Use W/A/S/D to move around, space to jump, and P to pause.", 60, (int)(screenSize.getHeight()/2+40));
+		graphics.drawString("Press Enter to Begin!", 60, (int)(screenSize.getHeight()/2+30));	
+		graphics.drawString("Use W/A/S/D to move around, space to jump, and P to pause.", 60, (int)(screenSize.getHeight()/2+60));
 	}
 	public static void endScreen(Graphics graphics, String finalTime) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 50));
