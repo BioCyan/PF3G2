@@ -12,29 +12,36 @@ public class Player {
 	private boolean onGround;
 	private Transform camera;
 	private UserMovement movement;
+	//Constructor for player class
 	public Player() {
 		 movement = new UserMovement();
 		 position = new Vector();
+		 //Create hitbox for the player
 		 hitbox = new Block(new Vector(-0.25f, -1, -0.25f), new Vector(0.25f, 0.25f, 0.25f));
 		 camera = new Transform();
 		 onGround = false;
 	}
 	
+	//Accessors
 	public UserMovement getMovement() {return movement;}
 	public Vector getPosition() {return position;}
 	public Transform getCamera() {return camera;}
 	
+	//Mutators
 	public void setMovement(UserMovement movement) {this.movement=movement;}
 	public void setPosition(Vector position) {this.position=position;}
 	public void setCamera(Transform camera) {this.camera=camera;}
 	
+	//Method that controls the use's movement
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle, List<Block> blocks) {
-		//Time is measured in milliseconds so this does happen
+		//Making sure delta time is not 0, so it doesn't mess up the calculation
 		if (deltaTime == 0) {
 			return;
 		}
 		
 		Rotation rot = new Rotation(yawAngle, pitchAngle);
+		
+		//Creates a vector that represents the ground speed and direction of the player
 		Vector direction = rot.localToWorld(new Vector(moveX, 0, moveZ));
 		if (onGround) {
 			movement.friction(deltaTime);
@@ -51,6 +58,7 @@ public class Player {
 		float newYSpeed = movement.getVelocity().y();
 		onGround = (oldYSpeed < 0 && newYSpeed != oldYSpeed);
 		
+		//Update the view of the player
 		camera = new Transform(position, rot);
 	}
 	
@@ -143,6 +151,7 @@ public class Player {
 		}
 	}
 
+	//Call the jump method if the player is onGound
 	public void jump() {
 		if(onGround) {
 			movement.jump();

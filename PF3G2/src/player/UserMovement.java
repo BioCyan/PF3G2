@@ -5,16 +5,22 @@ import math.Vector;
 
 public class UserMovement implements GameInterface {
 	private Vector velocity;
+	//Constructor
 	public UserMovement() {
 		velocity = new Vector(0,0,0);
 	}
 	
+	//Accessors
 	public Vector getVelocity() {return velocity;}
 	public float getAirFriction() {return INAIRFRICTION;}
 	
+	//Mutators
 	public void setVelocity(Vector movement) {this.velocity=movement;}
 	
+	//Gives the player a speed on the y axis
 	public void jump() {velocity = velocity.plus(new Vector (0,JUMPSPEED,0));}
+	
+	//Gives the player a 
 	public void fall(float deltaTime) {
 		velocity = velocity.minus(new Vector (0,ACCELERATIONOFGRAVITY*deltaTime,0));
 	}
@@ -42,6 +48,7 @@ public class UserMovement implements GameInterface {
 		velocity = groundMovement.unit().times(speed).plus(yMovement);
 	}
 	
+	//Slows the player down while in air
 	public void airFriction(float deltaTime) {
 		Vector yMovement = new Vector(0,velocity.y(),0);
 		Vector groundMovement =new Vector(velocity.x(),0,velocity.z());
