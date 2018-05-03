@@ -208,8 +208,8 @@ public class Game extends JPanel implements GameInterface{
 		float timer = playerTime-startTime;
 		timer = ((int) timer*1000)/1000.0f;
 		int milSec = (int) (timer%1000);
-		int sec = (int) ((timer/1000)%60000);
-		int min = (int) (sec/60);
+		int sec = (int) ((timer/1000)%60);
+		int min = (int) (timer/60000);
 		playerCurrentTime = min+":"+sec+":"+milSec;
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
