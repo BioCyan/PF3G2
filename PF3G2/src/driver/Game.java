@@ -102,37 +102,38 @@ public class Game extends JPanel implements GameInterface{
 			driver.Menu.pauseScreen(graphics);
 		}
 		if(run) {
-		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
-		
-		if(player.getPosition().y() < resetValue) {
-			player.setPosition(level.getStartPosition());
-			player.getMovement().setVelocity(new Vector());
-		}
-		
-		if(level.getEndBlock() != null &&
-				player.getPosition().x() > level.getEndBlock().getMins().x() && 
-				player.getPosition().x() < level.getEndBlock().getMaxs().x() &&
-				player.getPosition().z() > level.getEndBlock().getMins().z() &&
-				player.getPosition().z() < level.getEndBlock().getMaxs().z() &&
-				player.getPosition().y() > level.getEndBlock().getMaxs().y()) 
-		{
-			LevelInterface nextLevel = level.nextLevel();
-			if(nextLevel != null) {
-				level = nextLevel;
-				loadLevel(level);
+			player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
+			
+			if(player.getPosition().y() < resetValue) {
+				player.setPosition(level.getStartPosition());
+				player.getMovement().setVelocity(new Vector());
 			}
-			else {
-				run = false;
-				gameOver = true;
-				if(restart) {
-					level = new Level1();
+			
+			if(level.getEndBlock() != null &&
+					player.getPosition().x() > level.getEndBlock().getMins().x() && 
+					player.getPosition().x() < level.getEndBlock().getMaxs().x() &&
+					player.getPosition().z() > level.getEndBlock().getMins().z() &&
+					player.getPosition().z() < level.getEndBlock().getMaxs().z() &&
+					player.getPosition().y() > level.getEndBlock().getMaxs().y()) 
+			{
+				LevelInterface nextLevel = level.nextLevel();
+				if(nextLevel != null) {
+					level = nextLevel;
 					loadLevel(level);
 				}
+				else {
+					run = false;
+					gameOver = true;
+					if(restart) {
+						restart = false;
+						level = new Level1();
+						loadLevel(level);
+					}
+				}
 			}
-		}
+				
 			
-		
-		tree.render(graphics, player.getCamera(), screenSize, 90);
+			tree.render(graphics, player.getCamera(), screenSize, 90);
 		}
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 
