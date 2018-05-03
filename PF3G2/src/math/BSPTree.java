@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class BSPTree {
-	private static Random rand = new Random();
+	private static Random rand;
 	
 	private Plane plane;
-	//private int axis; //orientation of separating plane
-	//private float distance; //plane distance from origin along its normal
 	private List<Poly> polygons;
 	private BSPTree near;
 	private BSPTree far;
@@ -30,6 +28,7 @@ public class BSPTree {
 	}
 	
 	public BSPTree(List<Poly> polys) {
+		rand = new Random(1);
 		int splitIndex = rand.nextInt(polys.size());
 		Plane splitter = polys.get(splitIndex).getPlane();
 		List<Poly> far = new ArrayList<Poly>();
