@@ -6,7 +6,7 @@ public class Menu implements driver.GameInterface{
 	public static void startScreen(Graphics graphics) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 		graphics.setColor(Color.cyan);
-		graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
+		graphics.drawString("The J.U.M.P. Unusual Multi-dimensional Platformer", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
 		graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
