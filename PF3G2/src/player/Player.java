@@ -41,6 +41,9 @@ public class Player {
 		if (onGround) {
 			movement.friction(deltaTime);
 		}
+		else {
+			movement.airFriction(deltaTime, movement.getAirFriction());
+		}
 		movement.accelerate(deltaTime, direction);
 		movement.fall(deltaTime);
 		

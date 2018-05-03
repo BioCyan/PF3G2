@@ -5,11 +5,14 @@ import math.Vector;
 public class UserMovement {
 	private Vector velocity;
 	private final float ACCELERATIONOFGRAVITY=15,FRICTION=24,ACCELERATION=60, MAXSPEED=6, JUMPSPEED = 6;
+	private float inAirFriction;
 	public UserMovement() {
 		velocity = new Vector(0,0,0);
+		inAirFriction = 10;
 	}
 	
 	public Vector getVelocity() {return velocity;}
+	public float getAirFriction() {return inAirFriction;}
 	
 	public void setVelocity(Vector movement) {this.velocity=movement;}
 	
@@ -36,6 +39,16 @@ public class UserMovement {
 		Vector groundMovement =new Vector(velocity.x(),0,velocity.z());
 		float speed = groundMovement.length();
 		speed -= FRICTION*deltaTime;
+		if(speed<0)
+			speed = 0;
+		velocity = groundMovement.unit().times(speed).plus(yMovement);
+	}
+	
+	public void airFriction(float deltaTime, float airFriction) {
+		Vector yMovement = new Vector(0,velocity.y(),0);
+		Vector groundMovement =new Vector(velocity.x(),0,velocity.z());
+		float speed = groundMovement.length();
+		speed -= airFriction*deltaTime;
 		if(speed<0)
 			speed = 0;
 		velocity = groundMovement.unit().times(speed).plus(yMovement);
