@@ -209,6 +209,7 @@ public class Game extends JPanel implements GameInterface{
 		loadLevel(level);
 	}
 	
+	//Display the time passed in-game
 	private void displayTimer(Graphics graphics) {
 		playerTime = System.currentTimeMillis();
 		float timer = playerTime-startTime;
@@ -216,12 +217,14 @@ public class Game extends JPanel implements GameInterface{
 		int milSec = (int) (timer%1000);
 		int sec = (int) ((timer/1000)%60);
 		int min = (int) (timer/60000);
+		//Converting Millsec to standard display
 		playerCurrentTime = min+":"+sec+":"+milSec;
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
 		graphics.drawString(playerCurrentTime, 10, 35);
 	}
 	
+	//Display the FPS of the game
 	private void displayfps(Graphics graphics, float fps) {
 		String currentFps = fps+"";
 		graphics.setColor(Color.white);
