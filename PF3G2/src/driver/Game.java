@@ -9,7 +9,6 @@ import gameInterface.GameInterface;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-
 import math.*;
 import model.*;
 import player.Player;
@@ -84,13 +83,14 @@ public class Game extends JPanel implements GameInterface{
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		//if game has not started yet print out title and instruction to begin
-		startScreen(graphics);
+		if(!run&&!gameOver&&!paused)
+			menu.Menu.startScreen(graphics);
 		//if game not running and game is over, call endScreen method
-		if(!run&&gameOver) {
-			endScreen(graphics);
+		if(!run&&gameOver&&!restart) {
+			menu.Menu.endScreen(graphics);
 		}
 		if(paused&&!run&&!gameOver) {
-			pauseScreen(graphics);
+			menu.Menu.pauseScreen(graphics);
 		}
 		if(run) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
@@ -172,38 +172,6 @@ public class Game extends JPanel implements GameInterface{
 			}
 		
 			centerMouse();
-		}
-	}
-	
-	private void startScreen(Graphics graphics) {
-		if(!run&&!gameOver&&!paused) {
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
-			graphics.setColor(Color.cyan);
-			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-			graphics.setColor(Color.white);
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
-			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
-		}
-	}
-	
-	private void pauseScreen(Graphics graphics) {
-		if(!run&&!gameOver) {
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
-			graphics.setColor(Color.white);
-			graphics.drawString("GAME PAUSED", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-			graphics.setColor(Color.white);
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
-			graphics.drawString("PRESS 'P' TO UNPAUSE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
-		}
-		
-	}
-	
-	private void endScreen(Graphics graphics) {
-		if(!run&&gameOver&&!restart) {
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 50));
-			graphics.setColor(Color.red);
-			graphics.drawString("GAME OVER", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-			graphics.drawString("PRESS 'R' TO RESTART", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+40));
 		}
 	}
 	//needs revision
