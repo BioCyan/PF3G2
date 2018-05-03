@@ -5,14 +5,12 @@ import math.Vector;
 
 public class UserMovement implements GameInterface {
 	private Vector velocity;
-	private float inAirFriction;
 	public UserMovement() {
 		velocity = new Vector(0,0,0);
-		inAirFriction = 10;
 	}
 	
 	public Vector getVelocity() {return velocity;}
-	public float getAirFriction() {return inAirFriction;}
+	public float getAirFriction() {return INAIRFRICTION;}
 	
 	public void setVelocity(Vector movement) {this.velocity=movement;}
 	
@@ -44,11 +42,11 @@ public class UserMovement implements GameInterface {
 		velocity = groundMovement.unit().times(speed).plus(yMovement);
 	}
 	
-	public void airFriction(float deltaTime, float airFriction) {
+	public void airFriction(float deltaTime) {
 		Vector yMovement = new Vector(0,velocity.y(),0);
 		Vector groundMovement =new Vector(velocity.x(),0,velocity.z());
 		float speed = groundMovement.length();
-		speed -= airFriction*deltaTime;
+		speed -= INAIRFRICTION*deltaTime;
 		if(speed<0)
 			speed = 0;
 		velocity = groundMovement.unit().times(speed).plus(yMovement);
