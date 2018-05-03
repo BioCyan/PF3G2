@@ -29,7 +29,7 @@ public class Level2 implements LevelInterface {
 		platforms.add(new Block(new Vector(20, 0.25f, 11), new Vector(22, 0.5f, 12)));
 		platforms.add(new Block(new Vector(20, 0.50f, 8), new Vector(22, 1, 9)));
 		//stair corner 1
-		platforms.add(new Block(new Vector(19, 1, 6), new Vector(20, 1.5f, 8)));
+		platforms.add(new Block(new Vector(19, 1, 6), new Vector(20, 1.75f, 8)));
 		platforms.add(new Block(new Vector(16, 1.5f, 6), new Vector(17, 2, 8)));
 		// something
 		platforms.add(new Block(new Vector(16, 2.25f, 0), new Vector(17, 2.5f, 2)));
