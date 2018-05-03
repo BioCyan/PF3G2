@@ -116,6 +116,8 @@ public class Game extends JPanel implements GameInterface{
 			if(player.getPosition().y() < resetValue) {
 				player.setPosition(level.getStartPosition());
 				player.getMovement().setVelocity(new Vector());
+				yawAngle = 0;
+				pitchAngle = 0;
 			}
 			
 			if(level.getEndBlock() != null &&
@@ -269,7 +271,10 @@ public class Game extends JPanel implements GameInterface{
 				break;
 			case KeyEvent.VK_ENTER:
 				if (!run && !gameOver) {
-					startTime = System.currentTimeMillis();;
+					if (!paused) {
+						startTime = System.currentTimeMillis();
+					}
+					paused = false;
 					run = true;
 				}
 				break;
