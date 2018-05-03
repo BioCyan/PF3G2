@@ -63,6 +63,15 @@ public class Game extends JPanel implements GameInterface{
 				polygons.add(poly);
 			}
 		}
+		
+		Block endBlock = level.getEndBlock();
+		Vector meshPos = endBlock.getMins().plus(endBlock.getMaxs()).times(0.5f);
+		meshPos = meshPos.plus(new Vector(0, 0.5f, 0));
+		List<Poly> mesh = FileMesh.loadMesh("monkey.obj", meshPos, 0.3f);
+		for (Poly poly : mesh) {
+			polygons.add(poly);
+		}
+		
 		resetValue = level.resetYValue();
 		tree = new BSPTree(polygons);
 		player.setPosition(level.getStartPosition());

@@ -39,7 +39,6 @@ public class FileMesh {
 				List<Vector> polyVerts = new ArrayList<Vector>();
 				dataScan.useDelimiter("[\\s/]");
 				while (dataScan.hasNextInt()) {
-					System.out.println("vert");
 					int index = dataScan.nextInt() - 1;
 					polyVerts.add(vertices.get(index));
 					dataScan.next("");

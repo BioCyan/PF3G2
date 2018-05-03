@@ -17,7 +17,7 @@ public class Player {
 	public Player() {
 		 movement = new UserMovement();
 		 position = new Vector();
-		 hitbox = new Block(new Vector(-0.25f, -1, -0.25f), new Vector(0.25f, 1, 0.25f));
+		 hitbox = new Block(new Vector(-0.25f, -1, -0.25f), new Vector(0.25f, 0.25f, 0.25f));
 		 camera = new Transform();
 		 onGround = false;
 	}
