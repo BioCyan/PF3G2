@@ -105,20 +105,30 @@ public class Maze {
 		start = new Cell();
 		cellStack.push(start);
 		
+		
+		boolean reversing = false;
 		while (!cellStack.isEmpty()) {
 			Cell cell = cellStack.pop();
 			cell.set(true);
 			
+			boolean succeeded = false;
 			int tryFirst = rand.nextInt(4);
 			for (int i = 0; i < 4; i++) {
 				int direction = (i + tryFirst) % 4;
 				if (cell.validPath(direction) && !cell.reconnects(direction)) {
+					succeeded = true;
+					reversing = false;
 					cellStack.push(cell);
 					cellStack.push(cell.move(direction));
 					break;
 				}
 			}
-			endList.add(cell);
+			
+			System.out.println(reversing);
+			if (!succeeded && !reversing) {
+				reversing = true;
+				endList.add(cell);
+			}
 		}
 		
 		float maxDistance = 0;
