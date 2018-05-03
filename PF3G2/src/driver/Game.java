@@ -27,6 +27,7 @@ public class Game extends JPanel implements GameInterface{
 	private float moveX;
 	private float moveZ;
 	private float resetValue;
+	float fps;
 	private boolean run, gameOver, paused, restart, instructions = false;
 	private BSPTree tree;
 	private Player player;
@@ -139,18 +140,16 @@ public class Game extends JPanel implements GameInterface{
 					}
 				}
 			}
-				
-			
 			tree.render(graphics, player.getCamera(), screenSize, 90);
 			displayTimer(graphics);
+			displayfps(graphics, fps);
 		}
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 
 		frameCount++;			
 		if(frameCount >= 15)
 		{
-			float fps = 1000.0f*frameCount/(System.currentTimeMillis() - lastFPSCheck);
-			//System.out.println(fps);
+			fps = 1000.0f*frameCount/(System.currentTimeMillis() - lastFPSCheck);
 			lastFPSCheck = System.currentTimeMillis();
 			frameCount = 0;
 		}
@@ -213,6 +212,13 @@ public class Game extends JPanel implements GameInterface{
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
 		graphics.drawString(playerCurrentTime, 10, 15);
+	}
+	
+	private void displayfps(Graphics graphics, float fps) {
+		String currentFps = fps+"";
+		graphics.setColor(Color.white);
+		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
+		graphics.drawString(currentFps, (int)screenSize.getWidth()-25, 15);
 	}
 	
 	protected void processKeyEvent(KeyEvent event) {
