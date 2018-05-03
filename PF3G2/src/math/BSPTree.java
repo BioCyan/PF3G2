@@ -36,11 +36,17 @@ public class BSPTree {
 		List<Poly> middle = new ArrayList<Poly>();
 		for (Poly poly : polys) {
 			if (poly == polys.get(splitIndex) || poly.coplanar(splitter)) {
+				//Anything exactly on the plane is rendered in between everything else
+				//Ordering of these does not matter
 				middle.add(poly);
 			} else {
+				//If a poly is partly on both sides of the plane
+				//Split it into two halves for each side
 				Poly farAdd = poly.clip(splitter, true);
 				Poly nearAdd = poly.clip(splitter, false);
 				
+				//Add to appropriate lists to be made into subtrees later
+				//But only if the split actually left something on that side
 				if (farAdd != null) {
 					far.add(farAdd);
 				}
@@ -53,6 +59,7 @@ public class BSPTree {
 		this.plane = splitter;
 		this.polygons = middle;
 		
+		//null is used to indicate the base case of no more faces
 		if (near.size() == 0) {
 			this.near = null;
 		} else {

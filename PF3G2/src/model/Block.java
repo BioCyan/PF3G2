@@ -28,13 +28,15 @@ public class Block {
 	public Poly[] getPolys() {
 		Poly[] result = new Poly[6];
 		
-		//I could just write out all eight vertices
+		//I could just write out all eight vertices and six faces
 		//but what fun is that?
 		Vector[] verts = new Vector[8];
 		for (int i = 0; i < 8; i++) {
 			float[] coords = new float[3];
 			int j = 1;
 			for (int axis = 0; axis < 3; axis++) {
+				//Interpret the bits of i as which side of the cube
+				//along each axis each vertex is
 				boolean side = (i / j % 2) == 1;
 				if (side) {
 					coords[axis] = maxs.get(axis + 1);
@@ -46,20 +48,28 @@ public class Block {
 			verts[i] = new Vector(coords[0], coords[1], coords[2]);
 		}
 		
+		//Values of binary digits
 		int[] digits = {1, 2, 4};
 		for (int i = 0; i < 6; i++) {
 			Vector[] polyVerts = new Vector[4];
 			int axis = i / 2;
+			
+			//Which side of the cube we're adding our face
 			int side1 = i % 2;
+			//Keeps track of which side we're adding the next vertex
 			int side2 = 0;
+			//Like side2 but on a different access
 			int side3 = 0;
 			
 			for (int j = 0; j < 4; j++) {
+				//Use our sides to choose the axis digits of our vertices
+				//depending on which axis the poly is facing
 				int index = digits[axis] * side1;
 				index += digits[(axis + 1) % 3] * side2;
 				index += digits[(axis + 2) % 3] * side3;
 				polyVerts[j] = verts[index];
 				
+				//Flip the sides in such a way that we go in a counterclockwise loop
 				if (j % 2 != side1) {
 					side2 = 1 - side2;
 				} else {
