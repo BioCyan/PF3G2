@@ -3,6 +3,9 @@ package driver;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
+
+import gameInterface.GameInterface;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -12,7 +15,7 @@ import model.*;
 import player.Player;
 import levels.*;
 
-public class Game extends JPanel {
+public class Game extends JPanel implements GameInterface{
 	private static final long serialVersionUID = 1L;
 
 	private List<Poly> polygons;
@@ -21,7 +24,6 @@ public class Game extends JPanel {
 	private long time;
 	private long lastFPSCheck;
 	private long lastRepaint;
-	private float sensitivity = 5.0f/1000;
 	private float yawAngle = 0;
 	private float pitchAngle = 0;
 	private int frameCount = 0;
@@ -113,6 +115,10 @@ public class Game extends JPanel {
 			else {
 				run = false;
 				gameOver = true;
+				if(restart) {
+					level = new Level1();
+					loadLevel(level);
+				}
 			}
 		}
 			
@@ -203,7 +209,7 @@ public class Game extends JPanel {
 	//needs revision
 	private Level1 restartGame() {
 		gameOver = false;
-		run = true;
+		run = false;
 		restart = true;
 		return new Level1();
 		
