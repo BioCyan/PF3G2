@@ -1,10 +1,10 @@
 package player;
 
+import driver.GameInterface;
 import math.Vector;
 
-public class UserMovement {
+public class UserMovement implements GameInterface {
 	private Vector velocity;
-	private final float ACCELERATIONOFGRAVITY=15,FRICTION=24,ACCELERATION=60, MAXSPEED=6, JUMPSPEED = 6;
 	private float inAirFriction;
 	public UserMovement() {
 		velocity = new Vector(0,0,0);
