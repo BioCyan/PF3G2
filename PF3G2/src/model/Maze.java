@@ -101,6 +101,7 @@ public class Maze {
 		}
 		
 		Stack<Cell> cellStack = new Stack<Cell>();
+		List<Cell> endList = new ArrayList<Cell>();
 		start = new Cell();
 		cellStack.push(start);
 		
@@ -113,10 +114,19 @@ public class Maze {
 				int direction = (i + tryFirst) % 4;
 				if (cell.validPath(direction) && !cell.reconnects(direction)) {
 					cellStack.push(cell);
-					end = cell.move(direction);
-					cellStack.push(end);
+					cellStack.push(cell.move(direction));
 					break;
 				}
+			}
+			endList.add(cell);
+		}
+		
+		float maxDistance = 0;
+		for (Cell cell : endList) {
+			float distance = start.getPosition().minus(cell.getPosition()).length();
+			if (distance > maxDistance) {
+				maxDistance = distance;
+				end = cell;
 			}
 		}
 	}

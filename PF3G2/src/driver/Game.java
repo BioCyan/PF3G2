@@ -27,7 +27,7 @@ public class Game extends JPanel implements GameInterface{
 	private float moveX;
 	private float moveZ;
 	private float resetValue;
-	private boolean run, gameOver, paused, restart = false;
+	private boolean run, gameOver, paused, restart, instructions = false;
 	private BSPTree tree;
 	private Player player;
 	private LevelInterface level;
@@ -48,6 +48,7 @@ public class Game extends JPanel implements GameInterface{
 		hideCursor();
 		centerMouse();
 		enableEvents(MouseEvent.MOUSE_MOVED);
+		
 		time = System.currentTimeMillis();
 		lastFPSCheck = time;
 		lastRepaint = time;
@@ -88,13 +89,19 @@ public class Game extends JPanel implements GameInterface{
 	public void paintComponent(Graphics graphics) {
 		long currentTime = System.currentTimeMillis();
 		float deltaTime = 0.001f*(currentTime - lastRepaint);
-
 		
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		//if game has not started yet print out title and instruction to begin
-		if(!run&&!gameOver&&!paused)
+		if(!run&&!gameOver&&!paused) {
 			driver.Menu.startScreen(graphics);
+			if(instructions) {
+				driver.Menu.instructionScreen(graphics);
+			}
+			else {
+				driver.Menu.startScreen(graphics);
+			}
+		}
 		//if game not running and game is over, call endScreen method
 		if(!run&&gameOver&&!restart) {
 			driver.Menu.endScreen(graphics,playerCurrentTime);
@@ -132,6 +139,7 @@ public class Game extends JPanel implements GameInterface{
 					}
 				}
 			}
+				
 			
 			tree.render(graphics, player.getCamera(), screenSize, 90);
 			displayTimer(graphics);
@@ -239,6 +247,16 @@ public class Game extends JPanel implements GameInterface{
 					run = true;
 					paused = false;
 				}
+				break;
+			case KeyEvent.VK_I:
+				if(!run&&!instructions) {
+					instructions = true;
+				}
+				else {
+					instructions = false;
+				}
+				
+				
 				break;
 			case KeyEvent.VK_R:
 				if(gameOver) {
