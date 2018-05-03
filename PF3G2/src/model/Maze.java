@@ -92,7 +92,7 @@ public class Maze {
 	public Maze(int rows, int columns, float scale) {
 		this.scale = scale;
 		
-		Random rand = new Random(1);
+		Random rand = new Random();
 		grid = new boolean[rows][columns];
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < columns; j++) {
