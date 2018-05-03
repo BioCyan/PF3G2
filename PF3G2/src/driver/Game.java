@@ -28,8 +28,7 @@ public class Game extends JPanel {
 	private float moveX;
 	private float moveZ;
 	private float resetValue;
-	private boolean run = false;
-	private boolean gameOver = false;
+	private boolean run, gameOver, paused, restart = false;
 	private BSPTree tree;
 	private Player player;
 	private LevelInterface level;
@@ -88,7 +87,9 @@ public class Game extends JPanel {
 		if(!run&&gameOver) {
 			endScreen(graphics);
 		}
-		
+		if(paused&&!run&&!gameOver) {
+			pauseScreen(graphics);
+		}
 		if(run) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
 		
@@ -112,7 +113,6 @@ public class Game extends JPanel {
 			else {
 				run = false;
 				gameOver = true;
-				
 			}
 		}
 			
@@ -170,45 +170,43 @@ public class Game extends JPanel {
 	}
 	
 	private void startScreen(Graphics graphics) {
-		if(!run&&!gameOver) {
+		if(!run&&!gameOver&&!paused) {
 			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 			graphics.setColor(Color.cyan);
 			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-			
 			graphics.setColor(Color.white);
 			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
 			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
 		}
 	}
 	
-	private void pauseScreen() {
-		Graphics graphics;
-		Image img = createImage((int)screenSize.getWidth(),(int)screenSize.getHeight());
-		graphics = img.getGraphics();
-		graphics.setColor(Color.BLACK);
-		graphics.fillRect(0, 0, (int)screenSize.getWidth(),  (int)screenSize.getHeight());
-		if(run) {
-			run = false;
+	private void pauseScreen(Graphics graphics) {
+		if(!run&&!gameOver) {
 			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
-			graphics.setColor(Color.cyan);
-			graphics.drawString("3D MAZE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-		
+			graphics.setColor(Color.white);
+			graphics.drawString("GAME PAUSED", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
 			graphics.setColor(Color.white);
 			graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
-			graphics.drawString("Press Enter to Begin!", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
+			graphics.drawString("PRESS 'P' TO UNPAUSE", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+20));	
 		}
-		else {
-			run = true;
-			}
+		
 	}
 	
 	private void endScreen(Graphics graphics) {
-		if(!run&&gameOver) {
-			graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
-			graphics.setColor(Color.cyan);
+		if(!run&&gameOver&&!restart) {
+			graphics.setFont(new Font( "SansSerif", Font.BOLD, 50));
+			graphics.setColor(Color.red);
 			graphics.drawString("GAME OVER", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2)); 
-			//graphics.drawString("PRESS 'R' TO RESTART", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+30));
+			graphics.drawString("PRESS 'R' TO RESTART", (int)screenSize.getWidth()/2, (int)(screenSize.getHeight()/2+40));
 		}
+	}
+	//needs revision
+	private Level1 restartGame() {
+		gameOver = false;
+		run = true;
+		restart = true;
+		return new Level1();
+		
 	}
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
@@ -234,7 +232,19 @@ public class Game extends JPanel {
 				System.exit(0);
 				break;
 			case KeyEvent.VK_P:
-				pauseScreen();
+				if(run&&!paused) {
+					run = false;
+					paused = true;
+				}
+				else {
+					run = true;
+					paused = false;
+				}
+				break;
+			case KeyEvent.VK_R:
+				if(gameOver) {
+					restartGame();
+				}
 				break;
 			case KeyEvent.VK_ENTER:
 				run = true;
