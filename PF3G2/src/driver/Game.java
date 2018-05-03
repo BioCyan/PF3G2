@@ -139,6 +139,7 @@ public class Game extends JPanel implements GameInterface{
 				}
 			}
 				
+			
 			tree.render(graphics, player.getCamera(), screenSize, 90);
 		}
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
@@ -190,7 +191,7 @@ public class Game extends JPanel implements GameInterface{
 			centerMouse();
 		}
 	}
-	
+	//needs revision
 	private void restartGame() {
 		gameOver = false;
 		run = false;
@@ -198,7 +199,6 @@ public class Game extends JPanel implements GameInterface{
 		level = new Level1();
 		loadLevel(level);
 	}
-	
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
 			switch (event.getKeyCode()) {
