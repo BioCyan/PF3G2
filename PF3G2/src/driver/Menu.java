@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 public class Menu implements driver.GameInterface{
+	
+	//Display the startScreen
 	public static void startScreen(Graphics graphics) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 		graphics.setColor(Color.cyan);
@@ -13,6 +15,7 @@ public class Menu implements driver.GameInterface{
 		graphics.drawString("PRESS 'I' FOR INSTRUCTION MENU", 60, (int)(screenSize.getHeight()/2+60));
 	}
 	
+	//Display the pauseScreen
 	public static void pauseScreen(Graphics graphics) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 		graphics.setColor(Color.white);
@@ -20,6 +23,8 @@ public class Menu implements driver.GameInterface{
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 20 ));
 		graphics.drawString("PRESS 'P' TO UNPAUSE", 60, (int)(screenSize.getHeight()/2+20));
 	}
+	
+	//Display instructionScreen
 	public static void instructionScreen(Graphics graphics) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 		graphics.setColor(Color.BLACK);
@@ -30,6 +35,8 @@ public class Menu implements driver.GameInterface{
 		graphics.drawString("Press Enter to Begin!", 60, (int)(screenSize.getHeight()/2+30));	
 		graphics.drawString("Use W/A/S/D to move around, space to jump, and P to pause.", 60, (int)(screenSize.getHeight()/2+60));
 	}
+	
+	//Display endScreen
 	public static void endScreen(Graphics graphics, String finalTime) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 50));
 		graphics.setColor(Color.red);

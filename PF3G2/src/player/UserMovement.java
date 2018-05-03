@@ -20,20 +20,23 @@ public class UserMovement implements GameInterface {
 	//Gives the player a speed on the y axis
 	public void jump() {velocity = velocity.plus(new Vector (0,JUMPSPEED,0));}
 	
-	//Gives the player a 
+	//Gives the player a constant force downwards
 	public void fall(float deltaTime) {
 		velocity = velocity.minus(new Vector (0,ACCELERATIONOFGRAVITY*deltaTime,0));
 	}
 	
-	//This method increases the speed of the player
+	//This method increases the groundspeed of the player
 	public void accelerate(float deltaTime, Vector direction) {
 		Vector yMovement = new Vector(0,velocity.y(),0);
 		Vector groundMovement =new Vector(velocity.x(),0,velocity.z());
 		Vector groundDirection = new Vector(direction.x(),0,direction.z());
+		//Increase the groundspeed of the player
 		groundMovement = groundMovement.plus(groundDirection.unit().times(ACCELERATION*deltaTime));
+		//Capping the speed
 		if(groundMovement.length()>MAXSPEED){
 			groundMovement = groundMovement.unit().times(MAXSPEED);
 		}
+		//Combing the ground speed with the veritcal speed
 		velocity = groundMovement.plus(yMovement);
 	}
 	
