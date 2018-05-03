@@ -18,7 +18,9 @@ public class Level2 implements LevelInterface {
 		platforms.add(new Block(new Vector(8, 0.25f, 2), new Vector(14, 10, 4)));
 		//after corner
 		platforms.add(new Block(new Vector(14, 0.25f, 3), new Vector(16, 0.5f, 5)));
-		platforms.add(new Block(new Vector(16, 0.25f, 8), new Vector(2, 0.5f, 2)));
+		platforms.add(new Block(new Vector(14, 0.25f, 8), new Vector(16, 0.5f, 10)));
+		//after second corner
+		
 		/*platforms.add(new Block(new Vector(6, -0.50f, 6), new Vector(8, -0.25f, 8)));
 		platforms.add(new Block(new Vector(0, -1.25f, 12), new Vector(2, -1, 14)));
 		//ending
@@ -30,7 +32,7 @@ public class Level2 implements LevelInterface {
 	}
 
 	public Vector getStartPosition() {
-		return new Vector(1, 4, 1);
+		return new Vector(1, 2, 1);
 	}
 
 	public Block getEndBlock() {
