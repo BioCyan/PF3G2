@@ -251,7 +251,7 @@ public class Game extends JPanel implements GameInterface{
 					run = false;
 					paused = true;
 				}
-				else {
+				else if (paused) {
 					run = true;
 					paused = false;
 				}
