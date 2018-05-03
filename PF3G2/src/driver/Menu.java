@@ -1,8 +1,8 @@
-package menu;
+package driver;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-public class Menu implements gameInterface.GameInterface{
+public class Menu implements driver.GameInterface{
 	public static void startScreen(Graphics graphics) {
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 30));
 		graphics.setColor(Color.cyan);

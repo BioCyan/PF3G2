@@ -2,8 +2,6 @@ package driver;
 
 import javax.swing.*;
 
-import gameInterface.GameInterface;
-
 import java.awt.*;
 
 public class Driver implements GameInterface{

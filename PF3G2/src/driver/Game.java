@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
 
-import gameInterface.GameInterface;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -76,6 +74,8 @@ public class Game extends JPanel implements GameInterface{
 		tree = new BSPTree(polygons);
 		player.setPosition(level.getStartPosition());
 		player.getMovement().setVelocity(new Vector());
+		yawAngle = 0;
+		pitchAngle = 0;
 	}
 	
 	void hideCursor() {
@@ -93,13 +93,13 @@ public class Game extends JPanel implements GameInterface{
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		//if game has not started yet print out title and instruction to begin
 		if(!run&&!gameOver&&!paused)
-			menu.Menu.startScreen(graphics);
+			driver.Menu.startScreen(graphics);
 		//if game not running and game is over, call endScreen method
 		if(!run&&gameOver&&!restart) {
-			menu.Menu.endScreen(graphics);
+			driver.Menu.endScreen(graphics);
 		}
 		if(paused&&!run&&!gameOver) {
-			menu.Menu.pauseScreen(graphics);
+			driver.Menu.pauseScreen(graphics);
 		}
 		if(run) {
 		player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
@@ -184,12 +184,12 @@ public class Game extends JPanel implements GameInterface{
 		}
 	}
 	//needs revision
-	private Level1 restartGame() {
+	private void restartGame() {
 		gameOver = false;
 		run = false;
 		restart = true;
-		return new Level1();
-		
+		level = new Level1();
+		loadLevel(level);
 	}
 	protected void processKeyEvent(KeyEvent event) {
 		if (event.getID() == KeyEvent.KEY_PRESSED) {
