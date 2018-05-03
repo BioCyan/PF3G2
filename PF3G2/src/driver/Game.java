@@ -211,14 +211,14 @@ public class Game extends JPanel implements GameInterface{
 		playerCurrentTime = min+":"+sec+":"+milSec;
 		graphics.setColor(Color.white);
 		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
-		graphics.drawString(playerCurrentTime, 10, 15);
+		graphics.drawString(playerCurrentTime, 10, 35);
 	}
 	
 	private void displayfps(Graphics graphics, float fps) {
 		String currentFps = fps+"";
 		graphics.setColor(Color.white);
-		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15 ));
-		graphics.drawString(currentFps, (int)screenSize.getWidth()-25, 15);
+		graphics.setFont(new Font( "SansSerif", Font.BOLD, 15));
+		graphics.drawString(currentFps, 10, 15);
 	}
 	
 	protected void processKeyEvent(KeyEvent event) {
