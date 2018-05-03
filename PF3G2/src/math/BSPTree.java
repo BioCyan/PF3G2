@@ -71,6 +71,8 @@ public class BSPTree {
 		float dist = plane.distance(camPos);
 		
 		BSPTree first, last;
+		//determines which side of the splitting plane we are on
+		//and decide which half to go in the back
 		if (dist < 0) {
 			first = far;
 			last = near;
@@ -79,6 +81,7 @@ public class BSPTree {
 			last = far;
 		}
 		
+		//Recursively render back to front
 		if (first != null) {
 			first.render(graphics, camera, screenSize, fov);
 		}

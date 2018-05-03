@@ -89,8 +89,10 @@ public class Game extends JPanel implements GameInterface{
 	
 	public void paintComponent(Graphics graphics) {
 		long currentTime = System.currentTimeMillis();
+		//Represents the time that has passed between frames
 		float deltaTime = 0.001f*(currentTime - lastRepaint);
 		
+		//Clear the screen to black
 		graphics.setColor(Color.BLACK);
 		graphics.fillRect(0, 0, (int)screenSize.getWidth(), (int)screenSize.getHeight());
 		//if game has not started yet print out title and instruction to begin
@@ -113,6 +115,7 @@ public class Game extends JPanel implements GameInterface{
 		if(run) {
 			player.move(deltaTime, moveX, moveZ, yawAngle, pitchAngle, blocks);
 			
+			//Reset the player if they fall out of the world
 			if(player.getPosition().y() < resetValue) {
 				player.setPosition(level.getStartPosition());
 				player.getMovement().setVelocity(new Vector());
@@ -120,6 +123,7 @@ public class Game extends JPanel implements GameInterface{
 				pitchAngle = 0;
 			}
 			
+			//Check if the player has reached the end block if it exists
 			if(level.getEndBlock() != null &&
 					player.getPosition().x() > level.getEndBlock().getMins().x() && 
 					player.getPosition().x() < level.getEndBlock().getMaxs().x() &&
@@ -142,6 +146,8 @@ public class Game extends JPanel implements GameInterface{
 					}
 				}
 			}
+			
+			//Render using the BSP tree
 			tree.render(graphics, player.getCamera(), screenSize, 90);
 			displayTimer(graphics);
 			displayfps(graphics, fps);

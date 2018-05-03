@@ -9,7 +9,6 @@ import math.Poly;
 import math.Vector;
 
 
-
 public class FileMesh {
 	public static List<Poly> loadMesh(String fileName, Vector pos, float scale) {
 		Random rand = new Random();
