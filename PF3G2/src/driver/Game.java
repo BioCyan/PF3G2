@@ -56,6 +56,8 @@ public class Game extends JPanel implements GameInterface{
 	}
 	
 	private void loadLevel(LevelInterface level) {
+		//Load all the blocks into the list for collision
+		//and generate polys for rendering from it
 		blocks = level.getBlocks();
 		polygons = new ArrayList<Poly>();
 		for (Block block : blocks) {
@@ -64,6 +66,7 @@ public class Game extends JPanel implements GameInterface{
 			}
 		}
 		
+		//Put the monkey over the end block
 		Block endBlock = level.getEndBlock();
 		Vector meshPos = endBlock.getMins().plus(endBlock.getMaxs()).times(0.5f);
 		meshPos = meshPos.plus(new Vector(0, 0.5f, 0));
@@ -73,6 +76,8 @@ public class Game extends JPanel implements GameInterface{
 		}
 		
 		resetValue = level.resetYValue();
+		
+		//generate a BSP tree for rendering
 		tree = new BSPTree(polygons);
 		player.setPosition(level.getStartPosition());
 		player.getMovement().setVelocity(new Vector());
@@ -80,11 +85,12 @@ public class Game extends JPanel implements GameInterface{
 		pitchAngle = 0;
 	}
 	
+	//Hide our jittering cursor
 	void hideCursor() {
-		 BufferedImage image = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
-		 Cursor cursor = Toolkit.getDefaultToolkit()
-				 .createCustomCursor(image, new Point(0,0), "InvisibleCursor");        
-		 setCursor(cursor);
+		BufferedImage image = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
+		Cursor cursor = Toolkit.getDefaultToolkit()
+				.createCustomCursor(image, new Point(0,0), "InvisibleCursor");        
+		setCursor(cursor);
 	}
 	
 	public void paintComponent(Graphics graphics) {
@@ -153,6 +159,7 @@ public class Game extends JPanel implements GameInterface{
 			displayfps(graphics, fps);
 		}
 		
+		//Measure the framerate
 		long frameTime = (System.currentTimeMillis() - lastRepaint); 
 		frameCount++;			
 		if(frameCount >= 15)
@@ -162,6 +169,7 @@ public class Game extends JPanel implements GameInterface{
 			frameCount = 0;
 		}
 		
+		//Don't bother going to absurd framerates
 		if(frameTime < 1000.0/120.0)
 		{
 			try {
@@ -177,6 +185,7 @@ public class Game extends JPanel implements GameInterface{
 		repaint();
 	}
 	
+	//Resets the mouse to the center every frame so we don't hit the edge and get stuck while looking around
 	private void centerMouse() {
 		try {
 			Robot robot = new Robot();
