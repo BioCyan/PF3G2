@@ -13,6 +13,7 @@ public class Vector {
 		this.z = z;
 	}
 	
+	//Make a vector with only one nonzero axis
 	public Vector(int axis, float value) {
 		x = y = z = 0;
 		switch(axis) {
@@ -34,6 +35,7 @@ public class Vector {
 	public float y() {return y;}
 	public float z() {return z;}
 	
+	//Useful for iterating over the different axes
 	public float get(int axis) {
 		switch(axis) {
 		case 1:
@@ -51,6 +53,8 @@ public class Vector {
 		return Mathf.sqrt(x*x + y*y + z*z);
 	}
 	
+	//Returns a vector that has the same direction
+	//but is one unit long
 	public Vector unit() {
 		if (length() == 0) {
 			return new Vector();
@@ -59,10 +63,19 @@ public class Vector {
 		}
 	}
 	
+	//This is the vector dot product
+	//Technically it returns the product of the lengths of its inputs
+	//times the cosine of the angle between them
+	//Useful for finding the distance in the direction of a unit vector
 	public float dot(Vector v) {
 		return x*v.x() + y*v.y() + z*v.z();
 	}
 	
+	//This is the vector cross product
+	//It returns a vector perpendicular to its inputs
+	//with a length equals to the product of their lengths
+	//times the sine of the angle between them
+	//We only really use the perpendicular part
 	public Vector cross(Vector v) {
 		return new Vector(y*v.z() - z*v.y(),
 				z*v.x() - x*v.z(),
@@ -86,6 +99,7 @@ public class Vector {
 		return new Vector(x*scale, y*scale, z*scale);
 	}
 	
+	//Was used a lot in testing
 	public String toString() {
 		return "x: " + x + " y: " + y + " z: " + z;
 	}

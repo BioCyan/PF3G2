@@ -1,6 +1,9 @@
 package math;
 
 public class Rotation {
+	//Represents the directions of the different axes
+	//of the frame of reference of an object
+	//Or you just just think of it as a 3x3 matrix
 	private Vector x;
 	private Vector y;
 	private Vector z;

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import math.*;
 
 public class Maze {
+	//Used by the maze generator to abstract a position
+	//when moving and checking possible paths
 	private class Cell {
 		private int row;
 		private int column;
@@ -45,6 +47,7 @@ public class Maze {
 			return new Cell(newRow, newColumn);
 		}
 		
+		//Checks if out of bounds
 		public boolean valid() {
 			return row >= 0
 					&& column >= 0
@@ -52,6 +55,7 @@ public class Maze {
 					&& column < grid[0].length;
 		}
 		
+		//Don't go out of bounds or cut into other paths
 		public boolean validPath(int direction) {
 			Cell path = move(direction);
 			
@@ -61,6 +65,8 @@ public class Maze {
 			return true;
 		}
 		
+		//Checks if moving in a direction connects back to old paths
+		//so we don't dig out the whole maze endlessly
 		public boolean reconnects(int direction) {
 			Cell path = move(direction);
 			int from = (direction + 2) % 4;
@@ -140,14 +146,17 @@ public class Maze {
 		}
 	}
 	
+	//Player spawn position
 	public Vector getStart() {
 		return start.getPosition().times(scale);
 	}
 	
+	//Level end position
 	public Vector getEnd() {
 		return end.getPosition().times(scale);
 	}
 	
+	//Convert to Block objects
 	public List<Block> getBlocks() {
 		List<Block> result = new ArrayList<Block>();
 		for (int i = -1; i <= grid.length; i++) {
@@ -161,6 +170,7 @@ public class Maze {
 		return result;
 	}
 	
+	//Was used to test before 3D was working
 	public String toString() {
 		String result = "";
 		for (int i = -1; i <= grid.length; i++) {

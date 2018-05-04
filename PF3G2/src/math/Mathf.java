@@ -1,7 +1,8 @@
 package math;
 
 //3D games conventionally use floats instead of doubles for performance.
-//I don't know whether it's actually helping me in Java though.
+//Doing it here was probably a mistake though since Java does not accommodate them well.
+//This wraps used math functions that only have a double version
 public class Mathf {
 	public static final float PI = (float)Math.PI;
 

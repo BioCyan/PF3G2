@@ -1,7 +1,10 @@
 package math;
 
+//Represents an infinite plane
 public class Plane {
+	//Direction perpendicular to the plane
 	private Vector normal;
+	//Signed distance from the origin along that direction
 	private float position;
 	
 	public Plane(Vector normal, float position) {
@@ -24,6 +27,8 @@ public class Plane {
 		}
 	}
 	
+	//Returns the signed distance from the plane
+	//Towards the normal is positive, away is negative
 	public float distance(Vector v) {
 		return normal.dot(v) - position;
 	}

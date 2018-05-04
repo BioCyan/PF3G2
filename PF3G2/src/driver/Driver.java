@@ -2,6 +2,8 @@ package driver;
 
 import javax.swing.*;
 
+//Additional comments have been added
+//but the code has been left the same as when we presented
 public class Driver implements GameInterface{
 
 	public static void main(String[] args) {

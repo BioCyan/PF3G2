@@ -29,6 +29,8 @@ public class BSPTree {
 	
 	public BSPTree(List<Poly> polys) {
 		rand = new Random(1);
+		
+		//Choose a random poly to use as the plane to split
 		int splitIndex = rand.nextInt(polys.size());
 		Plane splitter = polys.get(splitIndex).getPlane();
 		List<Poly> far = new ArrayList<Poly>();
@@ -55,6 +57,8 @@ public class BSPTree {
 				}
 			}
 		}
+		//Since we don't draw backfaces, we could've also checked if the polys formed a convex surface
+		//and just put it in flat list, but we never got around to it
 		
 		this.plane = splitter;
 		this.polygons = middle;
@@ -78,7 +82,7 @@ public class BSPTree {
 		float dist = plane.distance(camPos);
 		
 		BSPTree first, last;
-		//determines which side of the splitting plane we are on
+		//Determines which side of the splitting plane we are on
 		//and decide which half to go in the back
 		if (dist < 0) {
 			first = far;
