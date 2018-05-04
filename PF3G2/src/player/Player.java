@@ -34,7 +34,7 @@ public class Player {
 	
 	//Method that controls the use's movement
 	public void move(float deltaTime, float moveX, float moveZ, float yawAngle, float pitchAngle, List<Block> blocks) {
-		//Making sure delta time is not 0, so it doesn't mess up the calculation
+		//Making sure delta time is not 0, so it doesn't mess up the ground check
 		if (deltaTime == 0) {
 			return;
 		}
@@ -52,6 +52,7 @@ public class Player {
 		movement.accelerate(deltaTime, direction);
 		movement.fall(deltaTime);
 		
+		//If a collision reduced downward velocity caused by gravity we are on the ground
 		float oldYSpeed = movement.getVelocity().y();
 		Vector target = position.plus(movement.getVelocity().times(deltaTime));
 		traceMove(target, blocks);
@@ -77,14 +78,16 @@ public class Player {
 			int collideAxis = 0;
 			int blockCollideAxis = 0;
 			for (Block block : blocks) {
+				//This is the lower bound for how far we can go before colliding
 				float enter = 0;
+				//This is the upper bound for how far collision is still possible
 				float exit = 1;
 				boolean inside = true;
 				for (int i = 0; i < 6; i++) {
 					int axis = i / 2 + 1;
 					boolean side = i % 2 == 1;
-					//Check whether our path crosses into the collision plane for this axis
-					//(Doesn't necessarily mean we actually hit the block)
+					
+					//Categorize target and position relative to the block plane being check
 					float boundary;
 					boolean targetIn, positionIn;
 					if (side) {
@@ -101,24 +104,31 @@ public class Player {
 						inside = false;
 					}
 					
-					//Move advance the farthest that definitely won't intersect the block
 					if (!targetIn && !positionIn) {
+						//Path fully outside block, collision impossible
 						enter = 1;
 						break;
 					} else if (targetIn && !positionIn && displacement.get(axis) != 0) {
+						//Entering a plane means any collision will be at or after that point
+						//Update the lower bound of how far we can go
 						float distance = (boundary - position.get(axis))/displacement.get(axis);
 						if (distance >= enter) {
 							blockCollideAxis = axis;
 							enter = distance;
 						}
 					} else if (!targetIn && positionIn) {
+						//Exiting a plane means no collision can occur after that point
 						float distance = 1 - (target.get(axis) - boundary)/displacement.get(axis);
 						if (distance < exit) {
 							exit = distance;
 						}
+						//Looking back, we forgot to actually use exit to reject possible collisions
+						//I guess the path is usually short enough for it to rarely be necessary so it was never noticed
 					}
 				}
 				
+				//If this block collision would occur before all other collision candidates
+				//It is our new collision point
 				if (enter < maxAdvance) {
 					maxAdvance = enter;
 					collideAxis = blockCollideAxis;
@@ -131,6 +141,7 @@ public class Player {
 				}
 			}
 			
+			//Update our velocity to no longer be moving into the colliding block
 			Vector nextDisplacement = displacement;
 			if (collideAxis != 0) {
 				Vector m = movement.getVelocity();
@@ -145,6 +156,8 @@ public class Player {
 			if (maxAdvance < 0) {
 				maxAdvance = 0;
 			}
+			
+			//Move to collision point and prepare to travel the remaining time with updated velocity
 			position = position.plus(displacement.times(maxAdvance));
 			displacement = nextDisplacement.times(1 - maxAdvance);
 			target = position.plus(displacement);
